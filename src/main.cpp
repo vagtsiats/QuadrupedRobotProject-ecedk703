@@ -1,14 +1,14 @@
 #include <Arduino.h>
 #include <ArduinoEigenDense.h>
 using namespace Eigen;
-
+#include "Leg.h"
 // put function declarations here:
 void printArray(MatrixXd a);
-
+Leg br;
 void setup() {
   Serial.begin(9600);
-
-    MatrixXd matrix  {3, 3};
+  
+MatrixXd matrix  {3, 3};
 
     VectorXd vec{3};
     vec << 1, 2, 3;
