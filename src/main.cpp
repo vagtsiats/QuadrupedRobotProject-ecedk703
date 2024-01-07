@@ -1,10 +1,12 @@
 #include <Arduino.h>
 #include <ArduinoEigenDense.h>
+#include "Servo.h"
+
 using namespace Eigen;
 #include "Leg.h"
 // put function declarations here:
 void printArray(MatrixXd a);
-Leg br;
+
 void setup() {
   Serial.begin(9600);
   
