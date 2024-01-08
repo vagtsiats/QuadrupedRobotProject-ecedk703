@@ -1,14 +1,20 @@
-#include <ArduinoEigenDense.h>
 #include "Servo.h"
-using namespace Eigen;
+#include <BasicLinearAlgebra.h>
+
 
 class Leg
 {
 public:
-    Leg();
+    Leg(int pin_shoulder,int pin_knee,int pin_ankle);
     ~Leg();
 
+    void setDh( BLA::Matrix<3> t_dh_a,BLA::Matrix<3> t_dh_alpha, BLA::Matrix<3> t_dh_d);
+
+    void setBodyT(BLA::Matrix<4, 4> t_body_T);
+
     void DriveLeg(int up, int mid, int low);
+
+    BLA::Matrix<3> getDh(int a);
 
 private:
     //Servos
@@ -16,19 +22,18 @@ private:
     Servo knee;
     Servo ankle;
     //Position Relative to body
-    const Matrix4d body_T;
-    //DH params in vectors of 3
-    Vector3f dh_alpha;
-    Vector3f dh_a;
-    Vector3f dh_d;
-    //position of end effector in Frame-0 
-    Vector3f pe;
-    //Translation Matrices
-    //To be computed from Forward Kin
-    Matrix4f T01;
-    Matrix4f T12;
-    Matrix4f T23;
-    //Jacobian matrice
-    MatrixXf Jacobian{6,3};
+    BLA::Matrix<4,4> body_T;
+    //DH
+    BLA::Matrix<3> dh_alpha;
+    BLA::Matrix<3> dh_a;
+    BLA::Matrix<3> dh_d;
+    //Position of End effector in frame-0
+    BLA::Matrix<3> pe;
+    //Translation between frames.
+    BLA::Matrix<3, 3> T01;
+    BLA::Matrix<3, 3> T12;
+    BLA::Matrix<3, 3> T23;
+    BLA::Matrix<6, 3> Jacobian;
+
 
 };

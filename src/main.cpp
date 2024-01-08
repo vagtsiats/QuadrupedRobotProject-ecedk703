@@ -1,34 +1,18 @@
 #include <Arduino.h>
-#include <ArduinoEigenDense.h>
 #include "Servo.h"
-
-using namespace Eigen;
 #include "Leg.h"
-// put function declarations here:
-void printArray(MatrixXd a);
 
+using namespace BLA;
+BLA::Matrix<4, 4> A;
+Leg br(5,6,7);
 void setup() {
-  Serial.begin(9600);
-  
-MatrixXd matrix  {3, 3};
-
-    VectorXd vec{3};
-    vec << 1, 2, 3;
-    //Create Matrix from collumn vectors
-    matrix << vec, vec, vec;
-  //Custom print Function
-  printArray(matrix);
+    Serial.begin(9600);
+    BLA::Matrix<3> br_dh_a={0.3,0.7,0.5};
+    BLA::Matrix<3> br_dh_alpha={M_PI_2,0,0};
+    BLA::Matrix<3> br_dh_d={0,0,0};
+    br.setDh(br_dh_a,br_dh_alpha,br_dh_d);
+    Serial<<br.getDh(0);
 
 }
 void loop() {
-  // put your main code here, to run repeatedly:
-}
-void printArray(MatrixXd a){
-   for (int i = 0; i < a.rows(); i++) {
-        for (int j = 0; j < a.cols(); j++) {
-      Serial.print(a(i,j));
-      Serial.print("\t");
-    }
-    Serial.println();
-  } 
 }
