@@ -16,6 +16,11 @@ public:
 
     BLA::Matrix<3> getDh(int a);
 
+    BLA::Matrix<4, 4> dhTransform(float a, float alpha, float d, float theta);
+
+    BLA::Matrix<4, 4> forwardKinematics(BLA::Matrix<3> theta);
+
+
 private:
     //Servos
     Servo shoulder;
