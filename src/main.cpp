@@ -5,6 +5,7 @@
 using namespace BLA;
 BLA::Matrix<4, 4> A;
 Leg br(5,6,7);
+
 void printMatrix(Matrix<4, 4> matrix);
 void setup() {
     Serial.begin(9600);
@@ -12,10 +13,8 @@ void setup() {
     BLA::Matrix<3> br_dh_alpha={M_PI_2,0,0};
     BLA::Matrix<3> br_dh_d={0,0,0};
     br.setDh(br_dh_a,br_dh_alpha,br_dh_d);
-
-    BLA::Matrix<3> theta={0,0,0};
-    printMatrix(br.forwardKinematics(theta));
-
+    br.updateTranslations(br_dh_d);
+    br.computeJacobian();
 }
 void loop() {
     
