@@ -27,11 +27,16 @@ public:
 
     BLA::Matrix<3> crossProduct(BLA::Matrix<3> a, BLA::Matrix<3> b);
 
+    void attach_servos();
+
 private:
     //Servos
     Servo shoulder;
     Servo knee;
     Servo ankle;
+    int pin_shoulder;
+    int pin_knee;
+    int pin_ankle;
     //Position Relative to body
     BLA::Matrix<4,4> body_T;
     //DH
@@ -48,11 +53,9 @@ private:
     BLA::Matrix<4, 4> T03;
 
     BLA::Matrix<3> z0={0,0,1};
-    Matrix<3> z1;
-    Matrix<3> z2;
+    BLA::Matrix<3> z1;
+    BLA::Matrix<3> z2;
 
     BLA::Matrix<6, 3> Jacobian;
 
-
 };
-

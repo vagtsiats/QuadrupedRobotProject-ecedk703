@@ -1,16 +1,22 @@
 #include "Leg.h"
 using namespace BLA;
-Leg::Leg(int pin_shoulder , int pin_knee,int pin_ankle)
+Leg::Leg(int t_pin_shoulder , int t_pin_knee,int t_pin_ankle)
 {
-    shoulder.attach(pin_shoulder);
-    knee.attach(pin_knee);
-    ankle.attach(pin_ankle);
+    pin_shoulder=t_pin_shoulder;
+    pin_knee=t_pin_knee;
+    pin_ankle=t_pin_ankle;
 
 }
 
 Leg::~Leg()
 {
 }
+void Leg::attach_servos(){
+    shoulder.attach(pin_shoulder);
+    knee.attach(pin_knee);
+    ankle.attach(pin_ankle);
+}
+
 void Leg::setDh(BLA::Matrix<3> t_dh_a,BLA::Matrix<3> t_dh_alpha,BLA::Matrix<3> t_dh_d)
 {
     dh_a=t_dh_a;
