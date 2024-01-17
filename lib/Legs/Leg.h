@@ -21,10 +21,12 @@ public:
 
     void updateTranslations(BLA::Matrix<3> theta);
 
-    BLA::Matrix<4, 4> forwardKinematics();
+    BLA::Matrix<3> forwardKinematics();
 
-    BLA::Matrix<6, 3> computeJacobian();
+    void computeJacobian();
 
+    BLA::Matrix<6, 3> getJacobian();
+    
     BLA::Matrix<3> crossProduct(BLA::Matrix<3> a, BLA::Matrix<3> b);
 
     void attach_servos();
@@ -45,6 +47,9 @@ private:
     BLA::Matrix<3> dh_d;
     //Position of End effector in frame-0
     BLA::Matrix<3> pe;
+    BLA::Matrix<3> p1;
+    BLA::Matrix<3> p2;
+
     //Translation between frames.
     BLA::Matrix<4, 4> T01;
     BLA::Matrix<4, 4> T12;

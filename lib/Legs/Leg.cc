@@ -36,23 +36,28 @@ BLA::Matrix<3> Leg::getDh(int a){
     else{return dh_d;}
 }
 Matrix<4,4> Leg::dhTransform(float a, float alpha, float d, float theta) {
-    Matrix<4,4> T = {cos(theta), -sin(theta), 0, a, sin(theta) * cos(alpha), cos(theta) * cos(alpha), -sin(alpha), -d * sin(alpha), sin(theta) * sin(alpha), cos(theta) * sin(alpha), cos(alpha), d * cos(alpha), 0, 0, 0, 1};
+    Matrix<4,4> T = {cos(theta), -sin(theta)*cos(alpha), sin(theta)*sin(alpha), a*cos(theta),
+                    sin(theta), cos(theta)*cos(alpha), -cos(theta)*sin(alpha), a*sin(theta), 
+                    0, sin(alpha), cos(alpha), d , 
+                    0, 0, 0, 1};
     return T;
 }
 void Leg::updateTranslations( BLA::Matrix<3> theta) {
     T01= dhTransform(dh_a(0), dh_alpha(0), dh_d(0), theta(0));
-    T02 = T01 * dhTransform(dh_a(1), dh_alpha(1), dh_d(1), theta(1));
-    T03= T02*dhTransform(dh_a(2), dh_alpha(2), dh_d(2), theta(2));
-    return;
-}
-Matrix<4,4> Leg::forwardKinematics( ) {
-    return T03;
-}
-Matrix<6,3> Leg::computeJacobian(){
+    T12 = dhTransform(dh_a(1), dh_alpha(1), dh_d(1), theta(1));
+    T23= dhTransform(dh_a(2), dh_alpha(2), dh_d(2), theta(2));
+    T02=T01*T12;
+    T03=T02*T23;
+
     pe(0)=T03(0,3);
     pe(1)=T03(1,3);
-    pe(2)=T03(2,3);
-    
+    pe(2)=T03(2,3);    
+    return;
+}
+Matrix<3> Leg::forwardKinematics( ) {
+    return pe;
+}
+void Leg::computeJacobian(){
     z1(0)=T01(0,2);
     z1(1)=T01(1,2);
     z1(2)=T01(2,2);
@@ -61,9 +66,27 @@ Matrix<6,3> Leg::computeJacobian(){
     z2(1)=T02(1,2);
     z2(2)=T02(2,2);
 
+    p1(0)=T01(0,3);
+    p1(1)=T01(1,3);
+    p1(2)=T01(2,3);
 
+    p2(0)=T02(0,3);
+    p2(1)=T02(1,3);
+    p2(2)=T02(2,3);
+
+    Matrix<3,3> J1 ;
+    J1=crossProduct(z0,pe)||crossProduct(z1,pe-p1)||crossProduct(z2,pe-p2);
+ 
+    Matrix<3,3> J2 ;
+    J2=z0||z1||z2;
+
+    Jacobian=J1 && J2;
     return;
 
+}
+BLA::Matrix<6, 3> Leg::getJacobian(){
+
+    return Jacobian;
 }
 
 Matrix<3> Leg::crossProduct(Matrix<3> a , Matrix<3> b ){
