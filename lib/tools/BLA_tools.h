@@ -19,3 +19,19 @@ BLA::Matrix<MatCols, MatRows> BLApseudoInverse(const BLA::Matrix<MatRows, MatCol
 {
     return Inverse(~Mat * Mat) * (~Mat);
 }
+
+template <int MatRows, int MatCols>
+void printMatrix(const BLA::Matrix<MatRows, MatCols> &matrix)
+{
+    for (int i = 0; i < MatRows; i++)
+    {
+        for (int j = 0; j < MatCols; j++)
+        {
+            Serial.print(matrix(i, j));
+            Serial.print("\t");
+        }
+        Serial.println();
+    }
+    Serial.println();
+    Serial.println();
+}
