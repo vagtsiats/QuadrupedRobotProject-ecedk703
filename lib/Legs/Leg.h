@@ -26,7 +26,9 @@ public:
     void computeJacobian();
 
     BLA::Matrix<6, 3> getJacobian();
-    
+
+    BLA::Matrix<3, 3> getJacobianPos();
+
     BLA::Matrix<3> crossProduct(BLA::Matrix<3> a, BLA::Matrix<3> b);
 
     void attach_servos();
@@ -36,6 +38,7 @@ private:
     Servo shoulder;
     Servo knee;
     Servo ankle;
+    //Pins
     int pin_shoulder;
     int pin_knee;
     int pin_ankle;
@@ -47,6 +50,7 @@ private:
     BLA::Matrix<3> dh_d;
     //Position of End effector in frame-0
     BLA::Matrix<3> pe;
+    //Other link Position vectors
     BLA::Matrix<3> p1;
     BLA::Matrix<3> p2;
 
@@ -61,6 +65,9 @@ private:
     BLA::Matrix<3> z1;
     BLA::Matrix<3> z2;
 
+    //Jacobians for Position, Orientation and total
+    BLA::Matrix<3,3> Jp;
+    BLA::Matrix<3,3> Jo;
     BLA::Matrix<6, 3> Jacobian;
 
 };

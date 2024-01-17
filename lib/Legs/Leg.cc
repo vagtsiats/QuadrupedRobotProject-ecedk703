@@ -74,20 +74,24 @@ void Leg::computeJacobian(){
     p2(1)=T02(1,3);
     p2(2)=T02(2,3);
 
-    Matrix<3,3> J1 ;
-    J1=crossProduct(z0,pe)||crossProduct(z1,pe-p1)||crossProduct(z2,pe-p2);
+    Jp=crossProduct(z0,pe)||crossProduct(z1,pe-p1)||crossProduct(z2,pe-p2);
  
-    Matrix<3,3> J2 ;
-    J2=z0||z1||z2;
+    Jo=z0||z1||z2;
 
-    Jacobian=J1 && J2;
+    Jacobian=Jp && Jo;
     return;
 
 }
-BLA::Matrix<6, 3> Leg::getJacobian(){
+Matrix<6, 3> Leg::getJacobian(){
 
     return Jacobian;
 }
+
+Matrix<3, 3> Leg::getJacobianPos(){
+
+    return Jp;
+}
+
 
 Matrix<3> Leg::crossProduct(Matrix<3> a , Matrix<3> b ){
     Matrix<3> cross;
