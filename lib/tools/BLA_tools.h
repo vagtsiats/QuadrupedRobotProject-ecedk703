@@ -1,3 +1,5 @@
+#pragma once
+
 #include <BasicLinearAlgebra.h>
 #include <vector>
 
