@@ -4,7 +4,7 @@
 #include <BasicLinearAlgebra.h>
 #include <iostream>
 #include <vector>
-
+#include "BLA_tools.h"
 class Leg
 {
 public:
@@ -32,6 +32,10 @@ public:
     BLA::Matrix<3, 3> getJacobianPos();
 
     BLA::Matrix<3> crossProduct(BLA::Matrix<3> a, BLA::Matrix<3> b);
+
+    void inverseDiffKinematics(BLA::Matrix<3> theta0, BLA::Matrix<3> xd, BLA::Matrix<3> xd_dot);
+
+    void resetInitialPos();
 
     void attach_servos();
 
@@ -77,5 +81,7 @@ private:
     BLA::Matrix<3,3> Jo;
     BLA::Matrix<6, 3> Jacobian;
     
+    bool initialisation=true;
+     BLA::Matrix<3> theta;
 
 };

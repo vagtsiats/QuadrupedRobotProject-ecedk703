@@ -7,10 +7,9 @@ public:
     Quad(/* args */);
     ~Quad();
    void initHardware();
-   void inverseDiffKinematics(unsigned int time0);
+    Leg br;
 
    private:
-   Leg br;
    Leg bl;
    Leg fr;
    Leg fl;

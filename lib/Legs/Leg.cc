@@ -105,3 +105,29 @@ Matrix<3> Leg::crossProduct(Matrix<3> a , Matrix<3> b ){
 
     return cross;
 }
+void Leg::inverseDiffKinematics(Matrix<3> theta0,Matrix<3> xd,  Matrix<3> xd_dot){
+    
+    Matrix<3,3> K={1,0,0,
+                   0,1,0,
+                   0,0,1};
+    float dt=0.02;
+    
+    if(initialisation){  
+        theta=theta0;
+        initialisation=false;
+    }
+
+    updateTranslations(theta);
+    computeJacobian();
+
+    //For theta 0 -pi/4 -pi/4 -> 7.95 0 -9.95 so we want to move on the z axis only with inverse dif kinematics: 
+    Matrix<3> error=xd-forwardKinematics();
+    theta+=(Inverse(getJacobianPos())*(xd_dot+K*error))*dt;
+    printMatrix(forwardKinematics());
+    
+}
+
+void Leg::resetInitialPos(){
+    initialisation=false;
+    return;
+}
