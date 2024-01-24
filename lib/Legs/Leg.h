@@ -6,7 +6,7 @@
 class Leg
 {
 public:
-    Leg(int pin_shoulder,int pin_knee,int pin_ankle);
+    Leg(int t_pin_shoulder, int t_pin_knee, int t_pin_ankle, float t_zeros[3], float t_polar[3]);
     ~Leg();
 
     void setDh( BLA::Matrix<3> t_dh_a,BLA::Matrix<3> t_dh_alpha, BLA::Matrix<3> t_dh_d);
@@ -38,6 +38,11 @@ private:
     Servo shoulder;
     Servo knee;
     Servo ankle;
+    //Zero Vectors and Polarity Vector
+    //Zero is where the angle of each servo coresponds to 0 in the DH params
+    //Polarity is +/- 1 such that the servos rotate in the same dir as the DH Frames
+    float zeros[3];
+    float polar[3];
     //Pins
     int pin_shoulder;
     int pin_knee;
@@ -69,5 +74,6 @@ private:
     BLA::Matrix<3,3> Jp;
     BLA::Matrix<3,3> Jo;
     BLA::Matrix<6, 3> Jacobian;
+    
 
 };

@@ -1,11 +1,15 @@
 #include "Leg.h"
 using namespace BLA;
-Leg::Leg(int t_pin_shoulder , int t_pin_knee,int t_pin_ankle)
+Leg::Leg(int t_pin_shoulder , int t_pin_knee,int t_pin_ankle,float * t_zeros,float * t_polar)
 {
     pin_shoulder=t_pin_shoulder;
     pin_knee=t_pin_knee;
     pin_ankle=t_pin_ankle;
-
+    for(int i=0;i<3;i++){
+        zeros[i]=t_zeros[i];
+        polar[i]=t_polar[i]; 
+    }
+    
 }
 
 Leg::~Leg()
@@ -25,9 +29,9 @@ void Leg::setDh(BLA::Matrix<3> t_dh_a,BLA::Matrix<3> t_dh_alpha,BLA::Matrix<3> t
 }
 void Leg::DriveLeg(int up,int mid ,int low){
 
-    shoulder.write(up);
-    knee.write(mid);
-    ankle.write(low);
+    shoulder.write(polar[0]*(up-zeros[0]));
+    knee.write(polar[1]*(mid-zeros[1]));
+    ankle.write(polar[2]*(low-zeros[2]));
 
 }
 BLA::Matrix<3> Leg::getDh(int a){

@@ -4,7 +4,10 @@
 #include "BLA_tools.h"
 using namespace BLA;
 unsigned int time0;
-Leg br(5,6,7);
+
+float zeros[3]={90,90,90};
+float polar[3]={1,1,1};
+Leg br(5,6,7,zeros,polar);
 
 void setup() {
     Serial.begin(9600);
