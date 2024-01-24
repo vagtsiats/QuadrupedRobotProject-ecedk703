@@ -2,11 +2,13 @@
 
 #include "Servo.h"
 #include <BasicLinearAlgebra.h>
+#include <iostream>
+#include <vector>
 
 class Leg
 {
 public:
-    Leg(int t_pin_shoulder, int t_pin_knee, int t_pin_ankle, float t_zeros[3], float t_polar[3]);
+    Leg(int t_pin_shoulder, int t_pin_knee, int t_pin_ankle, const std::vector<float>& t_zeros, const std::vector<float>& t_polar);
     ~Leg();
 
     void setDh( BLA::Matrix<3> t_dh_a,BLA::Matrix<3> t_dh_alpha, BLA::Matrix<3> t_dh_d);

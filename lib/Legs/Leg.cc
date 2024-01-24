@@ -1,6 +1,6 @@
 #include "Leg.h"
 using namespace BLA;
-Leg::Leg(int t_pin_shoulder , int t_pin_knee,int t_pin_ankle,float * t_zeros,float * t_polar)
+Leg::Leg(int t_pin_shoulder , int t_pin_knee,int t_pin_ankle, const std::vector<float>& t_zeros, const std::vector<float>& t_polar)
 {
     pin_shoulder=t_pin_shoulder;
     pin_knee=t_pin_knee;
