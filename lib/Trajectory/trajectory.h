@@ -33,7 +33,7 @@ public:
     /// @brief calculates the desired position @ t
     /// @param t > 0<t<Tst+Tsw
     /// @return
-    BLA::Matrix<1, 3> get_position(double t_t);
+    BLA::Matrix<1, 3, double> get_position(double t_t);
 
     /// @brief calculates the desired velocity @ t
     /// @param t > 0<t<Tst+Tsw

@@ -24,12 +24,16 @@ void Trajectory::calculate_trajectory()
     Pd_x_coeffs = differentiatePolynomial(P_x_coeffs);
 
     // printvector(P_x_coeffs);
+    // Serial.println();
+
+    // printvector(Pd_x_coeffs);
+    // Serial.println();
 
     P_y_coeffs = quintic_poly({y0, 0, 0, 0, 0, 0}, {y0 + y1, Tsw / 2, 0, Tsw / 2, 0, 3 * Tsw / 5});
     Pd_y_coeffs = differentiatePolynomial(P_y_coeffs);
 }
 
-BLA::Matrix<1, 3> Trajectory::get_position(double t_t)
+BLA::Matrix<1, 3, double> Trajectory::get_position(double t_t)
 {
     if (t_t <= Tst)
     {
@@ -42,7 +46,7 @@ BLA::Matrix<1, 3> Trajectory::get_position(double t_t)
     }
     else if ((t_t > (Tst + Tsw / 2)) && (t_t <= Tst + Tsw))
     {
-        return {-evaluatePolynomial(P_x_coeffs, Tsw + Tst - t_t), 0, evaluatePolynomial(P_y_coeffs, Tsw + Tst)};
+        return {-evaluatePolynomial(P_x_coeffs, Tsw + Tst - t_t), 0, evaluatePolynomial(P_y_coeffs, Tsw + Tst - t_t)};
     }
 
     return 0;
@@ -60,7 +64,7 @@ BLA::Matrix<1, 3, double> Trajectory::get_velocity(double t_t)
     }
     else if ((t_t > Tst + Tsw / 2) && (t_t <= Tst + Tsw))
     {
-        return {evaluatePolynomial(Pd_x_coeffs, Tsw + Tst - t_t), 0, -evaluatePolynomial(Pd_y_coeffs, Tsw + Tst)};
+        return {evaluatePolynomial(Pd_x_coeffs, Tsw + Tst - t_t), 0, -evaluatePolynomial(Pd_y_coeffs, Tsw + Tst - t_t)};
     }
 
     return 0;

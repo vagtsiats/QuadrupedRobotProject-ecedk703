@@ -14,7 +14,7 @@ std::vector<double> BLAMatrix2stdVector(const BLA::Matrix<1, MatCols, type> &Mat
 
     for (int i = 0; i < MatCols; i++)
     {
-        ret[i] = Mat(i);
+        ret[i] = Mat(0, i);
     }
     return ret;
 }
@@ -25,8 +25,8 @@ BLA::Matrix<MatCols, MatRows> BLApseudoInverse(const BLA::Matrix<MatRows, MatCol
     return Inverse(~Mat * Mat) * (~Mat);
 }
 
-template <int MatRows, int MatCols>
-void printMatrix(const BLA::Matrix<MatRows, MatCols> &matrix)
+template <int MatRows, int MatCols, typename type>
+void printMatrix(const BLA::Matrix<MatRows, MatCols, type> &matrix)
 {
     for (int i = 0; i < MatRows; i++)
     {

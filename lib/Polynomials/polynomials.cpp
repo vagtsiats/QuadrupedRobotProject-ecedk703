@@ -15,12 +15,12 @@ double evaluatePolynomial(const std::vector<double> &coefficients, double t)
 
 std::vector<double> differentiatePolynomial(const std::vector<double> &coefficients)
 {
-    int degree = coefficients.size() - 1;
+    int degree = coefficients.size()-1;
     std::vector<double> derivativeCoefficients(degree);
 
-    for (int i = degree; i > 0; --i)
+    for (int i = 0; i < degree; i++)
     {
-        derivativeCoefficients[degree - i] = i * coefficients[i];
+        derivativeCoefficients[i] = (degree - i) * coefficients[i];
     }
 
     return derivativeCoefficients;
@@ -49,7 +49,7 @@ std::vector<double> quintic_poly(const std::vector<double> &q1, const std::vecto
 
     BLA::Matrix<1, 6, double> a = ~(BLA::Inverse(T) * g);
 
-    auto retmat = BLAMatrix2stdVector<6>(a);
+    auto retmat = BLAMatrix2stdVector(a);
 
     return retmat;
 }
