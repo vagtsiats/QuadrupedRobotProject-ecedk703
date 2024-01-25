@@ -2,9 +2,12 @@
 
 #include <BasicLinearAlgebra.h>
 #include <vector>
+#include <iostream>
 
-template <int MatCols>
-std::vector<double> BLAMatrix2stdVector(const BLA::Matrix<1, MatCols> &Mat)
+void printvector(const std::vector<double> &a);
+
+template <int MatCols, typename type>
+std::vector<double> BLAMatrix2stdVector(const BLA::Matrix<1, MatCols, type> &Mat)
 {
 
     std::vector<double> ret(MatCols);
@@ -14,7 +17,7 @@ std::vector<double> BLAMatrix2stdVector(const BLA::Matrix<1, MatCols> &Mat)
         ret[i] = Mat(i);
     }
     return ret;
-};
+}
 
 template <int MatRows, int MatCols>
 BLA::Matrix<MatCols, MatRows> BLApseudoInverse(const BLA::Matrix<MatRows, MatCols> &Mat)

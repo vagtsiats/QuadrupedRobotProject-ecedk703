@@ -28,10 +28,12 @@ public:
 
     void change_parameters(double t_vd, double t_L, double t_y0);
 
+    double get_T() { return Tst + Tsw; }
+
     /// @brief calculates the desired position @ t
     /// @param t > 0<t<Tst+Tsw
     /// @return
-    BLA::Matrix<1, 3, double> get_position(double t_t);
+    BLA::Matrix<1, 3> get_position(double t_t);
 
     /// @brief calculates the desired velocity @ t
     /// @param t > 0<t<Tst+Tsw
