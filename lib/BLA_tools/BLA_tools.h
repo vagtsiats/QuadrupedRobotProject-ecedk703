@@ -26,17 +26,20 @@ BLA::Matrix<MatCols, MatRows> BLApseudoInverse(const BLA::Matrix<MatRows, MatCol
 }
 
 template <int MatRows, int MatCols, typename type>
-void printMatrix(const BLA::Matrix<MatRows, MatCols, type> &matrix)
+void BLAprintMatrix(const BLA::Matrix<MatRows, MatCols, type> &matrix)
 {
+    Serial.print("[");
     for (int i = 0; i < MatRows; i++)
     {
         for (int j = 0; j < MatCols; j++)
         {
             Serial.print(matrix(i, j));
-            Serial.print("\t");
+            if (j != MatCols - 1)
+                Serial.print("\t");
         }
+        if (i == MatRows - 1)
+            Serial.print("]");
         Serial.println();
     }
-    Serial.println();
-    Serial.println();
+    // Serial.println();
 }

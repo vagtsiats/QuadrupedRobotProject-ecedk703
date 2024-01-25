@@ -8,14 +8,13 @@ void setup()
     digitalWrite(LED_BUILTIN, 1);
 
     // NOTE - trajectory test
-    //  Trajectory leg_traj(1, 4, -14);
-    //  delay(2000);
-    //  double period = leg_traj.get_T();
+    // Trajectory leg_traj(1, 4, -14);
+    // delay(2000);
+    // double period = leg_traj.get_T();
 
     // for (double t = 0; t < 2 * period; t = t + 0.1)
     // {
-    //     Serial.println(fmod(t, period));
-    //     printMatrix(leg_traj.get_position(fmod(t, period)));
+    //     BLAprintMatrix(leg_traj.get_position(fmod(t, period)));
     // }
 
     time0 = micros();
