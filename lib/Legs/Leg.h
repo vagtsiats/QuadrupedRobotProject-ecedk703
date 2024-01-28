@@ -32,8 +32,7 @@ public:
     BLA::Matrix<3, 3> getJacobianPos();
 
     BLA::Matrix<3> crossProduct(BLA::Matrix<3> a, BLA::Matrix<3> b);
-
-    void inverseDiffKinematics(BLA::Matrix<3> theta0, BLA::Matrix<3> xd, BLA::Matrix<3> xd_dot);
+    void inverseDiffKinematics(BLA::Matrix<3> theta0, BLA::Matrix<3> xd,BLA::Matrix<3> xd_dot);
 
     void resetInitialPos();
 

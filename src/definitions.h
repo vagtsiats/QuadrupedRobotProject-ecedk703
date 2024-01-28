@@ -11,7 +11,7 @@ using namespace BLA;
 unsigned int time0;
 Quad Robot;
 
-Matrix<3> theta0 = {0, -M_PI / 4, -M_PI / 4};
+Matrix<3> theta0 = {0, M_PI/6,-M_PI/4};
 float t;
 
 Matrix<3> xd(float t)

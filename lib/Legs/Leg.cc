@@ -142,6 +142,7 @@ void Leg::inverseDiffKinematics(Matrix<3> theta0, Matrix<3> xd, Matrix<3> xd_dot
     Matrix<3> error = xd - forwardKinematics();
     theta += (Inverse(getJacobianPos()) * (xd_dot + K * error)) * dt;
     BLAprintMatrix(forwardKinematics());
+    // BLAprintMatrix(error);
 }
 
 void Leg::resetInitialPos()
