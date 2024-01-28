@@ -24,15 +24,15 @@ private:
     void calculate_trajectory();
 
 public:
-    Trajectory(double t_vd, double t_L, double t_y0);
+    Trajectory(double t_vd, double t_y0);
 
-    void change_parameters(double t_vd, double t_L, double t_y0);
+    void change_parameters(double t_vd, double t_y0);
 
     double get_T() { return Tst + Tsw; }
 
     /// @brief calculates the desired position @ t
     /// @param t > 0<t<Tst+Tsw
-    /// @return
+    /// @return Returns 1x3 Matrix with {x,y,z}, x+ the direction of movement
     BLA::Matrix<1, 3, double> get_position(double t_t);
 
     /// @brief calculates the desired velocity @ t
