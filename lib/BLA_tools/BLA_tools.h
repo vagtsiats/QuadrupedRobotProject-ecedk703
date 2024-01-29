@@ -39,7 +39,8 @@ void BLAprintMatrix(const BLA::Matrix<MatRows, MatCols, type> &matrix)
         }
         if (i == MatRows - 1)
             Serial.print("]");
-        Serial.println();
+        else
+            Serial.println();
     }
     // Serial.println();
 }

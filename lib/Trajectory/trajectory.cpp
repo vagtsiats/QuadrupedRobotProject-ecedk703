@@ -35,6 +35,8 @@ void Trajectory::calculate_trajectory()
 
 BLA::Matrix<1, 3, double> Trajectory::get_position(double t_t)
 {
+    t_t = fmod(t_t, get_T());
+
     if (t_t <= Tst)
     {
         return {((L / 2) - (vd * t_t)), 0, y0};
@@ -53,6 +55,8 @@ BLA::Matrix<1, 3, double> Trajectory::get_position(double t_t)
 
 BLA::Matrix<1, 3, double> Trajectory::get_velocity(double t_t)
 {
+    t_t = fmod(t_t, get_T());
+
     if (t_t <= Tst)
     {
         return {-vd, 0, 0};

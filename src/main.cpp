@@ -6,7 +6,6 @@ Trajectory leg_traj(1, 4, -14);
 void setup()
 {
     Serial.begin(9600);
-    Robot.initHardware();
 
     digitalWrite(LED_BUILTIN, 1);
 
@@ -19,28 +18,41 @@ void setup()
     // {
     //     BLAprintMatrix(leg_traj.get_position(fmod(t, period)));
     // }
-    time0 = micros();
 
+    timer0 = micros();
 }
+
 void loop()
 {
-    t = micros() - time0; // in micros
-    float t_sec = t / 1e6;
-    double period = leg_traj.get_T();
-    Matrix<3,1,double> doubleMatrix1=~leg_traj.get_position(fmod(t_sec, period));
-    Matrix<3,1,double> doubleMatrix2= ~leg_traj.get_velocity(fmod(t_sec, period));
-    Matrix<3> xd,xd_dot;
+    // SECTION - Alex Code
+    //  t = micros() - time0; // in micros
+    //  float t_sec = t / 1e6;
+    //  double period = leg_traj.get_T();
+    //  Matrix<3,1,double> doubleMatrix1=~leg_traj.get_position(fmod(t_sec, period));
+    //  Matrix<3,1,double> doubleMatrix2= ~leg_traj.get_velocity(fmod(t_sec, period));
+    //  Matrix<3> xd,xd_dot;
 
-    xd(0)=-doubleMatrix1(2);
-    xd(1)=doubleMatrix1(1);
-    xd(2)=doubleMatrix1(0);
+    // xd(0)=-doubleMatrix1(2);
+    // xd(1)=doubleMatrix1(1);
+    // xd(2)=doubleMatrix1(0);
 
-    xd_dot(0) = -doubleMatrix2(2);
-    xd_dot(1) = doubleMatrix2(1);
-    xd_dot(2) = doubleMatrix2(0);
+    // xd_dot(0) = -doubleMatrix2(2);
+    // xd_dot(1) = doubleMatrix2(1);
+    // xd_dot(2) = doubleMatrix2(0);
 
-    Robot.br.inverseDiffKinematics(theta0, xd,xd_dot);
+    // Robot.br.inverseDiffKinematics(theta0, xd,xd_dot);
 
+    // delay(20);
+    //! SECTION
 
-    delay(20);
+    // SECTION - constant  time loop:
+    if (micros() - timer0 >= LOOP_PERIOD)
+    {
+        timer0 = micros();
+        timer1 = timer0 / 1e6;
+
+        Robot.gait(timer1);
+        // NOTE - DiffKinematics Test
+        // Robot.br.inverseDiffKinematics(theta0, xd(timer1), xd_dot(timer1));
+    }
 }

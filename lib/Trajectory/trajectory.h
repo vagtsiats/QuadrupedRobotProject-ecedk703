@@ -31,7 +31,7 @@ public:
     double get_T() { return Tst + Tsw; }
 
     /// @brief calculates the desired position @ t
-    /// @param t > 0<t<Tst+Tsw
+    /// @param t > 0<t<Tst+Tsw,    t=0 is the touch-down event
     /// @return Returns 1x3 Matrix with {x,y,z}, x+ the direction of movement
     BLA::Matrix<1, 3, double> get_position(double t_t);
 
