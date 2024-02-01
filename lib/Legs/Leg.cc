@@ -150,3 +150,24 @@ void Leg::resetInitialPos()
     initialisation = false;
     return;
 }
+
+Matrix<3> Leg::InverseKinematics(Matrix<3> pos){
+    float x=pos(0);
+    float y=pos(1);
+    float z=pos(2);
+    Matrix<3> theta;
+    theta(0)=atan(y/x);
+    float c1=cos(theta(0));
+
+    float R=sqrt(pow(x/c1-dh_a(0),2)+pow(z,2));
+    float R2=acos((pow(dh_a(1),2)+pow(R,2)-pow(dh_a(2),2))/(2*dh_a(1)*R));
+    float R3=acos((pow(dh_a(1),2)+pow(dh_a(2),2)-pow(R,2))/(2*dh_a(1)*dh_a(2)));
+    float b2=atan(z/(x/c1-dh_a(0)));
+
+    theta(1)=-R2+b2;
+
+    
+    theta(2)=M_PI-R3;
+
+    return theta;
+}

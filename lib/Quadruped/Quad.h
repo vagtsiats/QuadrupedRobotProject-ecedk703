@@ -6,9 +6,7 @@
 class Quad
 {
 private:
-    void initHardware();
 
-    Leg br;
     Leg bl;
     Leg fr;
     Leg fl;
@@ -19,6 +17,9 @@ private:
     std::vector<double> dt_walk;
 
 public:
+    void initHardware();
+    Leg br;
+
     Quad(/* args */);
     ~Quad();
 

@@ -1,7 +1,7 @@
 #include "definitions.h"
 using namespace BLA;
 
-Trajectory leg_traj(1, 4, -14);
+// Trajectory leg_traj(1, 4, -14);
 
 void setup()
 {
@@ -18,7 +18,7 @@ void setup()
     // {
     //     BLAprintMatrix(leg_traj.get_position(fmod(t, period)));
     // }
-
+    Robot.initHardware();
     timer0 = micros();
 }
 
@@ -41,18 +41,16 @@ void loop()
     // xd_dot(2) = doubleMatrix2(0);
 
     // Robot.br.inverseDiffKinematics(theta0, xd,xd_dot);
-
-    // delay(20);
     //! SECTION
 
-    // SECTION - constant  time loop:
-    if (micros() - timer0 >= LOOP_PERIOD)
-    {
-        timer0 = micros();
-        timer1 = timer0 / 1e6;
+    // // SECTION - constant  time loop:
+    // if (micros() - timer0 >= LOOP_PERIOD)
+    // {
+    //     timer0 = micros();
+    //     timer1 = timer0 / 1e6;
 
-        Robot.gait(timer1);
-        // NOTE - DiffKinematics Test
-        // Robot.br.inverseDiffKinematics(theta0, xd(timer1), xd_dot(timer1));
-    }
+    //     Robot.gait(timer1);
+    //     // NOTE - DiffKinematics Test
+    //     // Robot.br.inverseDiffKinematics(theta0, xd(timer1), xd_dot(timer1));
+    // }
 }

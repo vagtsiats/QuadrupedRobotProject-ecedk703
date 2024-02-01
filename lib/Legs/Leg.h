@@ -37,6 +37,7 @@ public:
     void resetInitialPos();
 
     void attach_servos();
+    BLA::Matrix<3> InverseKinematics(BLA::Matrix<3> pos);
 
 private:
     //Servos
