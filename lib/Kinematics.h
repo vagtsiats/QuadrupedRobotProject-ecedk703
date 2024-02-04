@@ -15,7 +15,7 @@ public:
         a = set_a;
         alpha = set_alpha;
         d = {0, 0, 0};
-        set_alpha = {0, 0, 0};
+        theta = {0, 0, 0};
     }
 
     BLA::Matrix<4, 4> dhTransform(float d, float theta) {
