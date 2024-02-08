@@ -7,7 +7,6 @@ Quad::Quad(/* args */)
       fl(47, 45, 43, {90, 90, 90}, {1, 1, 1}),
       traj(Trajectory(1, -14))
 {
-    initHardware();
     dt_walk = {0, 2.0 / 4, 1.0 / 4, 3.0 / 4};
 }
 
