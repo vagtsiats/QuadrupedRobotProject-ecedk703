@@ -5,11 +5,31 @@
 #include <iostream>
 
 void printvector(const std::vector<float> &a);
-float CosineTheoremAngle(float a,float b, float c);
-float CosineTheoremSide(float a,float b, float phi);
-float QuadEqSolution(float a ,float b, float c);
+float CosineTheoremAngle(float a, float b, float c);
+float CosineTheoremSide(float a, float b, float phi);
+float QuadEqSolution(float a, float b, float c);
 float rad2deg(float rad);
 float deg2rad(float degrees);
+template <int MatDim, typename type = float>
+
+BLA::Matrix<MatDim, MatDim, type> BLAdiagonal(float k)
+{
+    BLA::Matrix<MatDim, MatDim> eye;
+
+    eye.Fill(0);
+
+    for (int i = 0; i < MatDim; i++)
+    {
+        for (int j = 0; j < MatDim; j++)
+        {
+            if (i == j)
+                eye(i, j) = k;
+        }
+    }
+
+    return eye;
+}
+
 template <int MatCols, typename type>
 std::vector<float> BLAMatrix2stdVector(const BLA::Matrix<1, MatCols, type> &Mat)
 {
