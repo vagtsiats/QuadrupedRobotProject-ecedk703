@@ -58,6 +58,7 @@ Matrix<4, 4> Leg::dhTransform(float a, float alpha, float d, float theta)
                       0, 0, 0, 1};
     return T;
 }
+
 void Leg::updateTranslations(BLA::Matrix<3> theta)
 {
     T01 = dhTransform(dh_a(0), dh_alpha(0), dh_d(0), theta(0));
@@ -145,29 +146,50 @@ void Leg::inverseDiffKinematics(Matrix<3> theta0, Matrix<3> xd, Matrix<3> xd_dot
     // BLAprintMatrix(error);
 }
 
+void Leg::JTransIK(BLA::Matrix<3> x_d, BLA::Matrix<3, 3> Gain, float dt, BLA::Matrix<3> initial_configuration)
+{
+
+    if (initialisation)
+    {
+        theta = initial_configuration;
+        initialisation = false;
+    }
+
+    updateTranslations(theta);
+    computeJacobian();
+
+    // For theta 0 -pi/4 -pi/4 -> 7.95 0 -9.95 so we want to move on the z axis only with inverse dif kinematics:
+    Matrix<3> error = x_d - forwardKinematics();
+
+    theta += (~(getJacobianPos()) * (Gain * error)) * dt;
+
+    BLAprintMatrix(forwardKinematics());
+    // BLAprintMatrix(error);
+}
+
 void Leg::resetInitialPos()
 {
     initialisation = false;
     return;
 }
 
-Matrix<3> Leg::InverseKinematics(Matrix<3> pos){
-    float x=pos(0);
-    float y=pos(1);
-    float z=pos(2);
+Matrix<3> Leg::InverseKinematics(Matrix<3> pos)
+{
+    float x = pos(0);
+    float y = pos(1);
+    float z = pos(2);
     Matrix<3> theta;
-    theta(0)=atan(y/x);
-    float c1=cos(theta(0));
+    theta(0) = atan(y / x);
+    float c1 = cos(theta(0));
 
-    float R=sqrt(pow(x/c1-dh_a(0),2)+pow(z,2));
-    float R2=acos((pow(dh_a(1),2)+pow(R,2)-pow(dh_a(2),2))/(2*dh_a(1)*R));
-    float R3=acos((pow(dh_a(1),2)+pow(dh_a(2),2)-pow(R,2))/(2*dh_a(1)*dh_a(2)));
-    float b2=atan(z/(x/c1-dh_a(0)));
+    float R = sqrt(pow(x / c1 - dh_a(0), 2) + pow(z, 2));
+    float R2 = acos((pow(dh_a(1), 2) + pow(R, 2) - pow(dh_a(2), 2)) / (2 * dh_a(1) * R));
+    float R3 = acos((pow(dh_a(1), 2) + pow(dh_a(2), 2) - pow(R, 2)) / (2 * dh_a(1) * dh_a(2)));
+    float b2 = atan(z / (x / c1 - dh_a(0)));
 
-    theta(1)=-R2+b2;
+    theta(1) = -R2 + b2;
 
-    
-    theta(2)=M_PI-R3;
+    theta(2) = M_PI - R3;
 
     return theta;
 }

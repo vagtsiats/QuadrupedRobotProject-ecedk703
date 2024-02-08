@@ -2,7 +2,7 @@
 using namespace BLA;
 
 Trajectory leg_traj(4, -14);
-Turn turning(4,-14);
+Turn turning(4, -14);
 void setup()
 {
     Serial.begin(9600);
@@ -28,8 +28,8 @@ void loop()
 {
     // SECTION - Alex Code
     float t = micros() - timer0; // in micros
-     float t_sec = t / 1e6;
-     double period = leg_traj.get_T();
+    float t_sec = t / 1e6;
+    double period = leg_traj.get_T();
     //  Matrix<3> doubleMatrix1=leg_traj.get_position(fmod(t_sec, period));
     //  Matrix<3> doubleMatrix2= leg_traj.get_velocity(fmod(t_sec, period));
     //  Matrix<3> xd,xd_dot;
@@ -45,21 +45,27 @@ void loop()
     // Matrix<3> theta0=Robot.br.InverseKinematics({14,0,2});
     // // BLAprintMatrix(xd);
     // Robot.br.updateTranslations(theta0);
-    
+
     // Robot.br.inverseDiffKinematics(theta0, xd,xd_dot);
     delay(20);
 
     //! SECTION
 
+    // SECTION - constant time loop :
+    if (micros() - timer0 >= LOOP_PERIODms)
+    {
+        timer0 = micros();
+        timer1 = timer0 / 1e6;
 
-    // // SECTION - constant  time loop:
-    // if (micros() - timer0 >= LOOP_PERIOD)
-    // {
-    //     timer0 = micros();
-    //     timer1 = timer0 / 1e6;
+        // Robot.gait(timer1);
+        // NOTE - DiffKinematics Test
+        // Robot.br.inverseDiffKinematics({0, 0, 0}, {3, 0, -10}, {0, 0, 0});
 
-    //     Robot.gait(timer1);
-    //     // NOTE - DiffKinematics Test
-    //     // Robot.br.inverseDiffKinematics(theta0, xd(timer1), xd_dot(timer1));
-    // }
+        Robot.br.JTransIK({3, 0, -10}, BLAdiagonal<3>(0.1), LOOP_PERIODsec);
+
+        Serial.println();
+    }
+
+    // BLAprintMatrix(BLAdiagonal<3>(1));
+    // Serial.println();
 }
