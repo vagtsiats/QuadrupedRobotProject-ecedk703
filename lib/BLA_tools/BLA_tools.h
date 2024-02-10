@@ -4,13 +4,13 @@
 #include <vector>
 #include <iostream>
 
-void printvector(const std::vector<double> &a);
+void printvector(const std::vector<float> &a);
 
 template <int MatCols, typename type>
-std::vector<double> BLAMatrix2stdVector(const BLA::Matrix<1, MatCols, type> &Mat)
+std::vector<float> BLAMatrix2stdVector(const BLA::Matrix<1, MatCols, type> &Mat)
 {
 
-    std::vector<double> ret(MatCols);
+    std::vector<float> ret(MatCols);
 
     for (int i = 0; i < MatCols; i++)
     {

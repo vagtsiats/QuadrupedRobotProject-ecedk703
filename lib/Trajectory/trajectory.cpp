@@ -1,12 +1,12 @@
 #include "trajectory.h"
 
-Trajectory::Trajectory(double t_vd, double t_y0) : vd(t_vd), y0(t_y0)
+Trajectory::Trajectory(float t_vd, float t_y0) : vd(t_vd), y0(t_y0)
 {
     y1 = 2;
     calculate_trajectory();
 }
 
-void Trajectory::change_parameters(double t_vd, double t_y0)
+void Trajectory::change_parameters(float t_vd, float t_y0)
 {
     vd = t_vd;
     y0 = t_y0;
@@ -18,7 +18,7 @@ void Trajectory::calculate_trajectory()
     L = 3 * vd;
     Tst = L / vd;
     Tsw = Tst / 3;
-    double tsw_vx0 = Tsw / 8;
+    float tsw_vx0 = Tsw / 8;
 
     P_x_coeffs = quintic_poly({-L / 2, 0, -vd, 0, 0, 0}, {0, Tsw / 2, 0, tsw_vx0, 0, Tsw / 2});
     Pd_x_coeffs = differentiatePolynomial(P_x_coeffs);
@@ -33,7 +33,7 @@ void Trajectory::calculate_trajectory()
     Pd_y_coeffs = differentiatePolynomial(P_y_coeffs);
 }
 
-BLA::Matrix<1, 3, double> Trajectory::get_position(double t_t)
+BLA::Matrix<3> Trajectory::get_position(float t_t)
 {
     t_t = fmod(t_t, get_T());
 
@@ -53,7 +53,7 @@ BLA::Matrix<1, 3, double> Trajectory::get_position(double t_t)
     return 0;
 }
 
-BLA::Matrix<1, 3, double> Trajectory::get_velocity(double t_t)
+BLA::Matrix<3> Trajectory::get_velocity(float t_t)
 {
     t_t = fmod(t_t, get_T());
 

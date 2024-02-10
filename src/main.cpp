@@ -1,7 +1,7 @@
 #include "definitions.h"
 using namespace BLA;
 
-// Trajectory leg_traj(1, 4, -14);
+Trajectory leg_traj(4, -14);
 
 void setup()
 {
@@ -25,23 +25,29 @@ void setup()
 void loop()
 {
     // SECTION - Alex Code
-    //  t = micros() - time0; // in micros
-    //  float t_sec = t / 1e6;
-    //  double period = leg_traj.get_T();
-    //  Matrix<3,1,double> doubleMatrix1=~leg_traj.get_position(fmod(t_sec, period));
-    //  Matrix<3,1,double> doubleMatrix2= ~leg_traj.get_velocity(fmod(t_sec, period));
-    //  Matrix<3> xd,xd_dot;
+    float t = micros() - timer0; // in micros
+     float t_sec = t / 1e6;
+     double period = leg_traj.get_T();
+     Matrix<3> doubleMatrix1=leg_traj.get_position(fmod(t_sec, period));
+     Matrix<3> doubleMatrix2= leg_traj.get_velocity(fmod(t_sec, period));
+     Matrix<3> xd,xd_dot;
 
-    // xd(0)=-doubleMatrix1(2);
-    // xd(1)=doubleMatrix1(1);
-    // xd(2)=doubleMatrix1(0);
+    xd(0)=-doubleMatrix1(2);
+    xd(1)=doubleMatrix1(1);
+    xd(2)=doubleMatrix1(0);
 
-    // xd_dot(0) = -doubleMatrix2(2);
-    // xd_dot(1) = doubleMatrix2(1);
-    // xd_dot(2) = doubleMatrix2(0);
+    xd_dot(0) = -doubleMatrix2(2);
+    xd_dot(1) = doubleMatrix2(1);
+    xd_dot(2) = doubleMatrix2(0);
 
-    // Robot.br.inverseDiffKinematics(theta0, xd,xd_dot);
+    Matrix<3> theta0=Robot.br.InverseKinematics({14,0,2});
+    // BLAprintMatrix(xd);
+    Robot.br.updateTranslations(theta0);
+    
+    Robot.br.inverseDiffKinematics(theta0, xd,xd_dot);
+    delay(20);
     //! SECTION
+
 
     // // SECTION - constant  time loop:
     // if (micros() - timer0 >= LOOP_PERIOD)
