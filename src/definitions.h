@@ -6,6 +6,7 @@
 #include "BLA_tools.h"
 #include "trajectory.h"
 #include "Quad.h"
+#include "Turn.h"
 using namespace BLA;
 
 const u_int32_t LOOP_PERIOD = 1e4; // 0.01sec
