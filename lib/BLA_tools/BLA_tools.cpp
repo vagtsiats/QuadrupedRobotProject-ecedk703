@@ -27,11 +27,11 @@ float QuadEqSolution(float a, float b, float c)
     return (-b+sqrt(D))/(2*a);
 }
 
-float rad2angle(float rad)
+float rad2deg(float rad)
 {
     return rad * (180.0 / M_PI);
 }
 
-float angle2rad(float degrees) {
+float deg2rad(float degrees) {
     return degrees * (M_PI / 180.0);
 }

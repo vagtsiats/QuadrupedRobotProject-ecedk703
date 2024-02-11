@@ -31,9 +31,9 @@ void Leg::setDh(BLA::Matrix<3> t_dh_a, BLA::Matrix<3> t_dh_alpha, BLA::Matrix<3>
 void Leg::DriveLeg(int up, int mid, int low)
 {
 
-    shoulder.write(polar[0] * (up - zeros[0]));
-    knee.write(polar[1] * (mid - zeros[1]));
-    ankle.write(polar[2] * (low - zeros[2]));
+    shoulder.write(polar[0] *(rad2deg(up) - zeros[0]));
+    knee.write(polar[1] *(rad2deg(mid) - zeros[1]));
+    ankle.write(polar[2] * (rad2deg(low) - zeros[2]));
 }
 BLA::Matrix<3> Leg::getDh(int a)
 {

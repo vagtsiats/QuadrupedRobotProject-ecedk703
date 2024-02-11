@@ -8,8 +8,8 @@ void printvector(const std::vector<float> &a);
 float CosineTheoremAngle(float a,float b, float c);
 float CosineTheoremSide(float a,float b, float phi);
 float QuadEqSolution(float a ,float b, float c);
-float rad2angle(float rad);
-float angle2rad(float degrees);
+float rad2deg(float rad);
+float deg2rad(float degrees);
 template <int MatCols, typename type>
 std::vector<float> BLAMatrix2stdVector(const BLA::Matrix<1, MatCols, type> &Mat)
 {

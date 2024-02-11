@@ -14,7 +14,7 @@ void Turn::calculateTurnParameters()
     theta2=asin(sin(phi)*(n-y)/d);
     
     Serial.println(d);
-    Serial.println(rad2angle(theta1));
-    Serial.println(rad2angle(theta2));
+    Serial.println(rad2deg(theta1));
+    Serial.println(rad2deg(theta2));
 }
 

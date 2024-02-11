@@ -32,6 +32,7 @@ public:
     BLA::Matrix<3, 3> getJacobianPos();
 
     BLA::Matrix<3> crossProduct(BLA::Matrix<3> a, BLA::Matrix<3> b);
+    
     void inverseDiffKinematics(BLA::Matrix<3> theta0, BLA::Matrix<3> xd,BLA::Matrix<3> xd_dot);
 
     void resetInitialPos();
@@ -45,7 +46,7 @@ private:
     Servo knee;
     Servo ankle;
     //Zero Vectors and Polarity Vector
-    //Zero is where the angle of each servo coresponds to 0 in the DH params
+    //Zero is where the angle of each servo coresponds to 0 in the DH params IN DEGREES
     //Polarity is +/- 1 such that the servos rotate in the same dir as the DH Frames
     float zeros[3];
     float polar[3];
