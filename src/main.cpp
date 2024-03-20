@@ -8,10 +8,15 @@ void setup()
     digitalWrite(LED_BUILTIN, 1);
 
     Robot.initHardware();
-
-    timer0 = micros();
 }
 
 void loop()
 {
+    BLA::Matrix<3> q = {0.9, 0.2, -0.5};
+
+    Robot.br.updateTranslations(q);
+    Robot.br.computeJacobian();
+
+    BLAprintMatrix(Robot.br.getJacobian());
+    Serial.println();
 }

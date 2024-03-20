@@ -81,7 +81,7 @@ private:
     BLA::Matrix<4, 4> T02;
     BLA::Matrix<4, 4> T03;
 
-    BLA::Matrix<3> z0 = {0, 0, 1};
+    BLA::Matrix<3> z0;
     BLA::Matrix<3> z1;
     BLA::Matrix<3> z2;
 

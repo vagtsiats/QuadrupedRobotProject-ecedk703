@@ -76,40 +76,31 @@ void Leg::updateTranslations(BLA::Matrix<3> theta)
     T02 = T01 * T12;
     T03 = T02 * T23;
 
-    pe(0) = T03(0, 3);
-    pe(1) = T03(1, 3);
-    pe(2) = T03(2, 3);
+    pe = {T03(0, 3), T03(1, 3), T03(2, 3)};
     return;
 }
+
 Matrix<3> Leg::forwardKinematics()
 {
     return pe;
 }
+
 void Leg::computeJacobian()
 {
-    z1(0) = T01(0, 2);
-    z1(1) = T01(1, 2);
-    z1(2) = T01(2, 2);
-
-    z2(0) = T02(0, 2);
-    z2(1) = T02(1, 2);
-    z2(2) = T02(2, 2);
-
-    p1(0) = T01(0, 3);
-    p1(1) = T01(1, 3);
-    p1(2) = T01(2, 3);
-
-    p2(0) = T02(0, 3);
-    p2(1) = T02(1, 3);
-    p2(2) = T02(2, 3);
-
-    Jp = crossProduct(z0, pe) || crossProduct(z1, pe - p1) || crossProduct(z2, pe - p2);
+    z0 = {BaseFrameTranslation(0, 2), BaseFrameTranslation(1, 2), BaseFrameTranslation(2, 2)};
+    z1 = {T01(0, 2), T01(1, 2), T01(2, 2)};
+    z2 = {T02(0, 2), T02(1, 2), T02(2, 2)};
+    p1 = {T01(0, 3), T01(1, 3), T01(2, 3)};
+    p2 = {T02(0, 3), T02(1, 3), T02(2, 3)};
 
     Jo = z0 || z1 || z2;
 
-    Jacobian = Jp && Jo;
+    Jp = crossProduct(z0, pe) || crossProduct(z1, pe - p1) || crossProduct(z2, pe - p2);
+
+    Jacobian = Jo && Jp;
     return;
 }
+
 Matrix<6, 3> Leg::getJacobian()
 {
 
@@ -126,11 +117,12 @@ Matrix<3> Leg::crossProduct(Matrix<3> a, Matrix<3> b)
 {
     Matrix<3> cross;
     cross(0) = a(1) * b(2) - a(2) * b(1);
-    cross(1) = a(0) * b(2) - a(2) * b(0);
+    cross(1) = -(a(0) * b(2) - a(2) * b(0));
     cross(2) = a(0) * b(1) - a(1) * b(0);
 
     return cross;
 }
+
 void Leg::inverseDiffKinematics(Matrix<3> theta0, Matrix<3> xd, Matrix<3> xd_dot)
 {
 
