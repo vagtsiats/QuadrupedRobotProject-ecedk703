@@ -9,9 +9,9 @@
 #include "Turn.h"
 using namespace BLA;
 
-const u_int32_t LOOP_PERIODms = 1e4; // 0.01sec
+const uint32_t LOOP_PERIODms = 1e4; // 0.01sec
 const float LOOP_PERIODsec = LOOP_PERIODms / 1e6;
-u_int32_t timer0; // constant loop timer
+uint32_t timer0; // constant loop timer
 double timer1;    // general purpose timer
 
 Quad Robot;
