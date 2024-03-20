@@ -20,9 +20,6 @@ Leg::Leg(int t_pin_shoulder, int t_pin_knee, int t_pin_ankle, const std::vector<
                             0, 0, 0, 1};
 }
 
-Leg::~Leg()
-{
-}
 void Leg::attach_servos()
 {
     shoulder.attach(pin_shoulder);
@@ -36,27 +33,27 @@ void Leg::setDh(BLA::Matrix<3> t_dh_a, BLA::Matrix<3> t_dh_alpha, BLA::Matrix<3>
     dh_alpha = t_dh_alpha;
     dh_d = t_dh_d;
 }
-void Leg::DriveLeg(int up, int mid, int low)
-{
 
-    shoulder.write(polar[0] * (rad2deg(up) - zeros[0]));
-    knee.write(polar[1] * (rad2deg(mid) - zeros[1]));
-    ankle.write(polar[2] * (rad2deg(low) - zeros[2]));
-}
-BLA::Matrix<3> Leg::getDh(int a)
+void Leg::DriveLeg(int t_shoulder, int t_knee, int t_ankle)
 {
-    if (a == 0)
-    {
-        return dh_a;
-    }
-    else if (a == 1)
-    {
-        return dh_alpha;
-    }
-    else
-    {
-        return dh_d;
-    }
+    shoulder.write(polar[0] * (rad2deg(t_shoulder) - zeros[0]));
+    knee.write(polar[1] * (rad2deg(t_knee) - zeros[1]));
+    ankle.write(polar[2] * (rad2deg(t_ankle) - zeros[2]));
+}
+
+void Leg::update_leg(const BLA::Matrix<3> &t_theta)
+{
+    updateTranslations(t_theta);
+
+    z0 = {BaseFrameTranslation(0, 2), BaseFrameTranslation(1, 2), BaseFrameTranslation(2, 2)};
+    z1 = {T01(0, 2), T01(1, 2), T01(2, 2)};
+    z2 = {T02(0, 2), T02(1, 2), T02(2, 2)};
+
+    p1 = {T01(0, 3), T01(1, 3), T01(2, 3)};
+    p2 = {T02(0, 3), T02(1, 3), T02(2, 3)};
+    pe = {T03(0, 3), T03(1, 3), T03(2, 3)};
+
+    computeJacobian();
 }
 
 Matrix<4, 4> Leg::dhTransform(float a, float alpha, float d, float theta)
@@ -68,7 +65,7 @@ Matrix<4, 4> Leg::dhTransform(float a, float alpha, float d, float theta)
     return T;
 }
 
-void Leg::updateTranslations(BLA::Matrix<3> theta)
+void Leg::updateTranslations(BLA::Matrix<3> t_theta)
 {
     T01 = BaseFrameTranslation * dhTransform(dh_a(0), dh_alpha(0), dh_d(0), theta(0));
     T12 = dhTransform(dh_a(1), dh_alpha(1), dh_d(1), theta(1));
@@ -76,22 +73,16 @@ void Leg::updateTranslations(BLA::Matrix<3> theta)
     T02 = T01 * T12;
     T03 = T02 * T23;
 
-    pe = {T03(0, 3), T03(1, 3), T03(2, 3)};
     return;
 }
 
-Matrix<3> Leg::forwardKinematics()
+Matrix<3> Leg::getEndEffectorPosition()
 {
     return pe;
 }
 
 void Leg::computeJacobian()
 {
-    z0 = {BaseFrameTranslation(0, 2), BaseFrameTranslation(1, 2), BaseFrameTranslation(2, 2)};
-    z1 = {T01(0, 2), T01(1, 2), T01(2, 2)};
-    z2 = {T02(0, 2), T02(1, 2), T02(2, 2)};
-    p1 = {T01(0, 3), T01(1, 3), T01(2, 3)};
-    p2 = {T02(0, 3), T02(1, 3), T02(2, 3)};
 
     Jo = z0 || z1 || z2;
 
@@ -103,65 +94,46 @@ void Leg::computeJacobian()
 
 Matrix<6, 3> Leg::getJacobian()
 {
-
     return Jacobian;
 }
 
 Matrix<3, 3> Leg::getJacobianPos()
 {
-
     return Jp;
 }
 
-void Leg::inverseDiffKinematics(Matrix<3> theta0, Matrix<3> xd, Matrix<3> xd_dot)
+// void Leg::JInvIK(Matrix<3> theta0, Matrix<3> xd, Matrix<3> xd_dot)
+void Leg::JInvIK(BLA::Matrix<3> x_des, BLA::Matrix<3> xd_des, BLA::Matrix<3, 3> t_gain, float t_dt, BLA::Matrix<3> t_initial_configuration)
 {
-
-    Matrix<3, 3> K = {1, 0, 0,
-                      0, 1, 0,
-                      0, 0, 1};
-    float dt = 0.02;
-
     if (initialisation)
     {
-        theta = theta0;
+        theta = t_initial_configuration;
         initialisation = false;
     }
 
-    updateTranslations(theta);
-    computeJacobian();
-
     // For theta 0 -pi/4 -pi/4 -> 7.95 0 -9.95 so we want to move on the z axis only with inverse dif kinematics:
-    Matrix<3> error = xd - forwardKinematics();
-    theta += (Inverse(getJacobianPos()) * (xd_dot + K * error)) * dt;
-    BLAprintMatrix(forwardKinematics());
+    Matrix<3> error = x_des - getEndEffectorPosition();
+    theta += (Inverse(getJacobianPos()) * (xd_des + t_gain * error)) * t_dt;
+
+    // BLAprintMatrix(getEndEffectorPosition());
     // BLAprintMatrix(error);
 }
 
-void Leg::JTransIK(BLA::Matrix<3> x_d, BLA::Matrix<3, 3> Gain, float dt, BLA::Matrix<3> initial_configuration)
+void Leg::JTranspIK(BLA::Matrix<3> x_des, BLA::Matrix<3, 3> t_gain, float t_dt, BLA::Matrix<3> t_initial_configuration)
 {
 
     if (initialisation)
     {
-        theta = initial_configuration;
+        theta = t_initial_configuration;
         initialisation = false;
     }
 
-    updateTranslations(theta);
-    computeJacobian();
+    Matrix<3> error = x_des - getEndEffectorPosition();
 
-    // For theta 0 -pi/4 -pi/4 -> 7.95 0 -9.95 so we want to move on the z axis only with inverse dif kinematics:
-    Matrix<3> error = x_d - forwardKinematics();
+    theta += (~(getJacobianPos()) * (t_gain * error)) * t_dt;
 
-    theta += (~(getJacobianPos()) * (Gain * error)) * dt;
-
-    BLAprintMatrix(forwardKinematics());
+    // BLAprintMatrix(getEndEffectorPosition());
     // BLAprintMatrix(error);
-}
-
-void Leg::resetInitialPos()
-{
-    initialisation = false;
-    return;
 }
 
 Matrix<3> Leg::InverseKinematics(Matrix<3> pos)
@@ -184,3 +156,26 @@ Matrix<3> Leg::InverseKinematics(Matrix<3> pos)
 
     return theta;
 }
+
+// NOTE - Unused Functions
+// void Leg::resetInitialPos()
+// {
+//     initialisation = false;
+//     return;
+// }
+//
+// BLA::Matrix<3> Leg::getDh(int a)
+// {
+//     if (a == 0)
+//     {
+//         return dh_a;
+//     }
+//     else if (a == 1)
+//     {
+//         return dh_alpha;
+//     }
+//     else
+//     {
+//         return dh_d;
+//     }
+// }

@@ -14,8 +14,7 @@ void loop()
 {
     BLA::Matrix<3> q = {0.9, 0.2, -0.5};
 
-    Robot.br.updateTranslations(q);
-    Robot.br.computeJacobian();
+    Robot.br.update_leg(q);
 
     BLAprintMatrix(Robot.br.getJacobian());
     Serial.println();

@@ -9,67 +9,84 @@ class Leg
 {
 public:
     Leg(int t_pin_shoulder, int t_pin_knee, int t_pin_ankle, const std::vector<float> &t_zeros, const std::vector<float> &t_polar);
-    ~Leg();
 
     void setDh(BLA::Matrix<3> t_dh_a, BLA::Matrix<3> t_dh_alpha, BLA::Matrix<3> t_dh_d);
 
-    void setBodyT(BLA::Matrix<4, 4> t_body_T);
+    void attach_servos();
 
-    void DriveLeg(int up, int mid, int low);
+    /// @brief Drive leg servos
+    /// @param t_shoulder
+    /// @param t_knee
+    /// @param t_ankle
+    void DriveLeg(int t_shoulder, int t_knee, int t_ankle);
 
-    BLA::Matrix<3> getDh(int a);
+    void update_leg(const BLA::Matrix<3> &theta);
 
-    BLA::Matrix<4, 4> dhTransform(float a, float alpha, float d, float theta);
-
-    void updateTranslations(BLA::Matrix<3> theta);
-
-    BLA::Matrix<3> forwardKinematics();
-
-    void computeJacobian();
+    BLA::Matrix<3> getEndEffectorPosition();
 
     BLA::Matrix<6, 3> getJacobian();
 
     BLA::Matrix<3, 3> getJacobianPos();
 
-    void inverseDiffKinematics(BLA::Matrix<3> theta0, BLA::Matrix<3> xd, BLA::Matrix<3> xd_dot);
+    /// @brief Inverse Kinematics Algorithm with Jacobian Inverse. Used for following a desired trajectory
+    /// @param x_des desired position {x,y,z}
+    /// @param xd_des desired velocity {vx,vy,vz}
+    /// @param t_gain 3by3 diagonal gain matrix
+    /// @param t_dt
+    /// @param t_initial_configuration
+    void JInvIK(BLA::Matrix<3> x_des, BLA::Matrix<3> xd_des, BLA::Matrix<3, 3> t_gain, float t_dt, BLA::Matrix<3> initial_configuration = {0, 0, 0});
 
-    /// @brief Inverse Kinematics Algorithm with Jacobian Transpose
+    /// @brief Inverse Kinematics Algorithm with Jacobian Transpose. Used for initializing the leg position (maybe removed)?
     /// @param x_d desired position {x,y,z}
-    /// @param Gain 3by3 diagonal
-    /// @param dt
-    /// @param initial_configuration default = {0,0,0}
-    void JTransIK(BLA::Matrix<3> x_d, BLA::Matrix<3, 3> Gain, float dt, BLA::Matrix<3> initial_configuration = {0, 0, 0});
+    /// @param t_gain 3by3 diagonal gain matrix
+    /// @param t_dt
+    /// @param t_initial_configuration default = {0,0,0}
+    void JTranspIK(BLA::Matrix<3> x_des, BLA::Matrix<3, 3> t_gain, float t_dt, BLA::Matrix<3> t_initial_configuration = {0, 0, 0});
 
-    void resetInitialPos();
-
-    void attach_servos();
+    /// @brief closed form IK
+    /// @param pos desired position {x,y,z}
+    /// @return
     BLA::Matrix<3> InverseKinematics(BLA::Matrix<3> pos);
+
+    // NOTE - Unused Functions
+    // BLA::Matrix<3> getDh(int a);
+    // void resetInitialPos();
+
+    // NOTE - undefined
+    // void setBodyT(BLA::Matrix<4, 4> t_body_T);
+    // BLA::Matrix<4, 4> body_T;
 
 private:
     // Servos
     Servo shoulder;
     Servo knee;
     Servo ankle;
+
     // Zero Vectors and Polarity Vector
-    // Zero is where the angle of each servo coresponds to 0 in the DH params
-    // Polarity is +/- 1 such that the servos rotate in the same dir as the DH Frames
-    float zeros[3];
-    float polar[3];
+    float zeros[3]; // Where the angle of each servo corresponds to 0 in the DH params
+    float polar[3]; // +/- 1 such that the servos rotate in the same dir as the DH Frames
+
     // Pins
     int pin_shoulder;
     int pin_knee;
     int pin_ankle;
-    // Position Relative to body
-    BLA::Matrix<4, 4> body_T;
+
+    /// @brief computes Homogeneous transformation based on dh parameters
+    BLA::Matrix<4, 4> dhTransform(float a, float alpha, float d, float theta);
+
+    void updateTranslations(BLA::Matrix<3> theta);
+
+    void computeJacobian();
+
     // DH
     BLA::Matrix<3> dh_alpha;
     BLA::Matrix<3> dh_a;
     BLA::Matrix<3> dh_d;
-    // Position of End effector in frame-0
-    BLA::Matrix<3> pe;
-    // Other link Position vectors
+
+    // Position vectors
     BLA::Matrix<3> p1;
     BLA::Matrix<3> p2;
+    BLA::Matrix<3> pe; // Position of EndEffector in frame-0
 
     BLA::Matrix<4, 4> BaseFrameTranslation;
 
