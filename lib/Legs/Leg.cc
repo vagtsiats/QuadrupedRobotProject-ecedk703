@@ -36,12 +36,14 @@ void Leg::setDh(BLA::Matrix<3> t_dh_a, BLA::Matrix<3> t_dh_alpha, BLA::Matrix<3>
     dh_alpha = t_dh_alpha;
     dh_d = t_dh_d;
 }
-void Leg::DriveLeg(int up, int mid, int low)
+/// @brief 
+/// @param theta in rad
+void Leg::DriveLeg(Matrix<3> theta)
 {
 
-    shoulder.write(polar[0] * (rad2deg(up) - zeros[0]));
-    knee.write(polar[1] * (rad2deg(mid) - zeros[1]));
-    ankle.write(polar[2] * (rad2deg(low) - zeros[2]));
+    shoulder.write(polar[0] * (rad2deg(theta(0)) + zeros[0]));
+    knee.write(polar[1] * (rad2deg(theta(1)) + zeros[1]));
+    ankle.write(polar[2] * (rad2deg(theta(2)) + zeros[2]));
 }
 BLA::Matrix<3> Leg::getDh(int a)
 {
@@ -131,26 +133,34 @@ Matrix<3> Leg::crossProduct(Matrix<3> a, Matrix<3> b)
 
     return cross;
 }
-void Leg::inverseDiffKinematics(Matrix<3> theta0, Matrix<3> xd, Matrix<3> xd_dot)
+void Leg::update(Matrix<3> theta){
+
+    updateTranslations(theta);
+    computeJacobian();
+    
+}
+void Leg::inverseDiffKinematics(Matrix<3> theta0,Matrix<3> xd, Matrix<3> xd_dot)
 {
 
-    Matrix<3, 3> K = {1, 0, 0,
-                      0, 1, 0,
-                      0, 0, 1};
-    float dt = 0.02;
-
+    Matrix<3, 3> K = {10, 0, 0,
+                      0, 10, 0,
+                      0, 0, 10};
+    float dt = 0.02;//Could become argument
     if (initialisation)
     {
         theta = theta0;
         initialisation = false;
     }
 
-    updateTranslations(theta);
-    computeJacobian();
-
+    update(theta);
     // For theta 0 -pi/4 -pi/4 -> 7.95 0 -9.95 so we want to move on the z axis only with inverse dif kinematics:
+    //error computation
     Matrix<3> error = xd - forwardKinematics();
+    //Euler Integration
     theta += (Inverse(getJacobianPos()) * (xd_dot + K * error)) * dt;
+    //Drive
+    DriveLeg(theta);
+    //Debugs
     BLAprintMatrix(forwardKinematics());
     // BLAprintMatrix(error);
 }
@@ -176,10 +186,9 @@ void Leg::JTransIK(BLA::Matrix<3> x_d, BLA::Matrix<3, 3> Gain, float dt, BLA::Ma
     // BLAprintMatrix(error);
 }
 
-void Leg::resetInitialPos()
+void Leg::resetInitial()
 {
-    initialisation = false;
-    return;
+    initialisation=true;
 }
 
 Matrix<3> Leg::InverseKinematics(Matrix<3> pos)

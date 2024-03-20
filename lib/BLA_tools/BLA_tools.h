@@ -66,5 +66,5 @@ void BLAprintMatrix(const BLA::Matrix<MatRows, MatCols, type> &matrix)
         else
             Serial.println();
     }
-    // Serial.println();
+    Serial.println();
 }

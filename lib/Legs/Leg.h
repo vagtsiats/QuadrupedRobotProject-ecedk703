@@ -15,7 +15,7 @@ public:
 
     void setBodyT(BLA::Matrix<4, 4> t_body_T);
 
-    void DriveLeg(int up, int mid, int low);
+    void DriveLeg(BLA::Matrix <3> theta);
 
     BLA::Matrix<3> getDh(int a);
 
@@ -27,12 +27,15 @@ public:
 
     void computeJacobian();
 
+    void update(BLA::Matrix<3> theta);
+
+    void inverseDiffKinematics(BLA::Matrix<3> theta0,BLA::Matrix<3> xd, BLA::Matrix<3> xd_dot);
+
     BLA::Matrix<6, 3> getJacobian();
 
     BLA::Matrix<3, 3> getJacobianPos();
 
     BLA::Matrix<3> crossProduct(BLA::Matrix<3> a, BLA::Matrix<3> b);
-    void inverseDiffKinematics(BLA::Matrix<3> theta0, BLA::Matrix<3> xd, BLA::Matrix<3> xd_dot);
 
     /// @brief Inverse Kinematics Algorithm with Jacobian Transpose
     /// @param x_d desired position {x,y,z}
@@ -41,9 +44,12 @@ public:
     /// @param initial_configuration default = {0,0,0}
     void JTransIK(BLA::Matrix<3> x_d, BLA::Matrix<3, 3> Gain, float dt, BLA::Matrix<3> initial_configuration = {0, 0, 0});
 
-    void resetInitialPos();
+    void resetInitial();
 
+    void setInitialTheta(BLA::Matrix<3> theta0);
+    
     void attach_servos();
+
     BLA::Matrix<3> InverseKinematics(BLA::Matrix<3> pos);
 
 private:
@@ -92,4 +98,5 @@ private:
 
     bool initialisation = true;
     BLA::Matrix<3> theta;
+
 };
