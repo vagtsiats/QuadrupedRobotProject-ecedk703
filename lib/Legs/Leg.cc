@@ -113,16 +113,6 @@ Matrix<3, 3> Leg::getJacobianPos()
     return Jp;
 }
 
-Matrix<3> Leg::crossProduct(Matrix<3> a, Matrix<3> b)
-{
-    Matrix<3> cross;
-    cross(0) = a(1) * b(2) - a(2) * b(1);
-    cross(1) = -(a(0) * b(2) - a(2) * b(0));
-    cross(2) = a(0) * b(1) - a(1) * b(0);
-
-    return cross;
-}
-
 void Leg::inverseDiffKinematics(Matrix<3> theta0, Matrix<3> xd, Matrix<3> xd_dot)
 {
 

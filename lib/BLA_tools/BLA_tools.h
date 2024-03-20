@@ -5,13 +5,18 @@
 #include <iostream>
 
 void printvector(const std::vector<float> &a);
+
+// Returns Angle in Rad with sides a,b,c where c is opposite to the angle
 float CosineTheoremAngle(float a, float b, float c);
+
+// Returns Side length in cm with sides a,b, and angle phi in rad
 float CosineTheoremSide(float a, float b, float phi);
 float QuadEqSolution(float a, float b, float c);
 float rad2deg(float rad);
 float deg2rad(float degrees);
-template <int MatDim, typename type = float>
+BLA::Matrix<3> crossProduct(BLA::Matrix<3> a, BLA::Matrix<3> b);
 
+template <int MatDim, typename type = float>
 BLA::Matrix<MatDim, MatDim, type> BLAdiagonal(float k)
 {
     BLA::Matrix<MatDim, MatDim> eye;
