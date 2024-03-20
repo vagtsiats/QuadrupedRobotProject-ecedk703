@@ -5,11 +5,19 @@ Leg::Leg(int t_pin_shoulder, int t_pin_knee, int t_pin_ankle, const std::vector<
     pin_shoulder = t_pin_shoulder;
     pin_knee = t_pin_knee;
     pin_ankle = t_pin_ankle;
+
+    theta = {0, 0, 0};
+
     for (int i = 0; i < 3; i++)
     {
         zeros[i] = t_zeros[i];
         polar[i] = t_polar[i];
     }
+
+    BaseFrameTranslation = {0, 0, 1, 0,
+                            0, 1, 0, 0,
+                            -1, 0, 0, 0,
+                            0, 0, 0, 1};
 }
 
 Leg::~Leg()
@@ -31,8 +39,8 @@ void Leg::setDh(BLA::Matrix<3> t_dh_a, BLA::Matrix<3> t_dh_alpha, BLA::Matrix<3>
 void Leg::DriveLeg(int up, int mid, int low)
 {
 
-    shoulder.write(polar[0] *(rad2deg(up) - zeros[0]));
-    knee.write(polar[1] *(rad2deg(mid) - zeros[1]));
+    shoulder.write(polar[0] * (rad2deg(up) - zeros[0]));
+    knee.write(polar[1] * (rad2deg(mid) - zeros[1]));
     ankle.write(polar[2] * (rad2deg(low) - zeros[2]));
 }
 BLA::Matrix<3> Leg::getDh(int a)
@@ -50,6 +58,7 @@ BLA::Matrix<3> Leg::getDh(int a)
         return dh_d;
     }
 }
+
 Matrix<4, 4> Leg::dhTransform(float a, float alpha, float d, float theta)
 {
     Matrix<4, 4> T = {cos(theta), -sin(theta) * cos(alpha), sin(theta) * sin(alpha), a * cos(theta),
@@ -61,7 +70,7 @@ Matrix<4, 4> Leg::dhTransform(float a, float alpha, float d, float theta)
 
 void Leg::updateTranslations(BLA::Matrix<3> theta)
 {
-    T01 = dhTransform(dh_a(0), dh_alpha(0), dh_d(0), theta(0));
+    T01 = BaseFrameTranslation * dhTransform(dh_a(0), dh_alpha(0), dh_d(0), theta(0));
     T12 = dhTransform(dh_a(1), dh_alpha(1), dh_d(1), theta(1));
     T23 = dhTransform(dh_a(2), dh_alpha(2), dh_d(2), theta(2));
     T02 = T01 * T12;
