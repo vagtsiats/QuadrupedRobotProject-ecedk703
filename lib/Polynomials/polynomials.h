@@ -1,13 +1,11 @@
 #pragma once
 
-#include <iostream>
-#include <vector>
-#include <cmath>
+
 #include <BasicLinearAlgebra.h>
 #include "BLA_tools.h"
 
-float evaluatePolynomial(const std::vector<float> &coefficients, float t);
+float evaluatePolynomial(BLA::Matrix<6> coefficients, float t);
 
-std::vector<float> differentiatePolynomial(const std::vector<float> &coefficients);
+BLA::Matrix<6> differentiatePolynomial(BLA::Matrix<6> coefficients);
 
-std::vector<float> quintic_poly(const std::vector<float> &q1, const std::vector<float> &q2);
+BLA::Matrix<6> quintic_poly(BLA::Matrix<6> q1, BLA::Matrix<6>q2);

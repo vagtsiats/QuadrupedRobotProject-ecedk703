@@ -1,14 +1,14 @@
 #include "Leg.h"
 using namespace BLA;
-Leg::Leg(int t_pin_shoulder, int t_pin_knee, int t_pin_ankle, const std::vector<float> &t_zeros, const std::vector<float> &t_polar)
+Leg::Leg(int t_pin_shoulder, int t_pin_knee, int t_pin_ankle, BLA::Matrix<3> t_zeros, BLA::Matrix<3> t_polar)
 {
     pin_shoulder = t_pin_shoulder;
     pin_knee = t_pin_knee;
     pin_ankle = t_pin_ankle;
     for (int i = 0; i < 3; i++)
     {
-        zeros[i] = t_zeros[i];
-        polar[i] = t_polar[i];
+        zeros[i] = t_zeros(i);
+        polar[i] = t_polar(i);
     }
 }
 

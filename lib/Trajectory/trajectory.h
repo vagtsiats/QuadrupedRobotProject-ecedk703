@@ -1,7 +1,6 @@
 #pragma once
 
 #include <BasicLinearAlgebra.h>
-#include <vector>
 #include "polynomials.h"
 
 class Trajectory
@@ -15,10 +14,10 @@ private:
     float Tst;
     float Tsw;
 
-    std::vector<float> P_x_coeffs;
-    std::vector<float> P_y_coeffs;
-    std::vector<float> Pd_x_coeffs;
-    std::vector<float> Pd_y_coeffs;
+    BLA::Matrix<6> P_x_coeffs;
+    BLA::Matrix<6> P_y_coeffs;
+    BLA::Matrix<6> Pd_x_coeffs;
+    BLA::Matrix<6> Pd_y_coeffs;
 
     /// @brief calculates the trajectory's polynomials
     void calculate_trajectory();

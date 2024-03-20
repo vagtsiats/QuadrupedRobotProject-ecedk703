@@ -1,16 +1,5 @@
 #include <BLA_tools.h>
 
-void printvector(const std::vector<double> &a)
-{
-    Serial.print("[");
-    for (int i = 0; i < a.size(); i++)
-    {
-        if (i != 0)
-            Serial.print(",");
-        Serial.print(a[i]);
-    }
-    Serial.print("]");
-}
 //Returns Angle in Rad with sides a,b,c where c is oposite to the angle
 float CosineTheoremAngle(float a,float b, float c){
     return acos((a*a+b*b-c*c)/(2*a*b));

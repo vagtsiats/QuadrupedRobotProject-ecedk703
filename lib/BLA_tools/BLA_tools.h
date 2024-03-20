@@ -1,27 +1,14 @@
 #pragma once
 
 #include <BasicLinearAlgebra.h>
-#include <vector>
-#include <iostream>
 
-void printvector(const std::vector<float> &a);
+// void printvector(const std::vector<float> &a);
 float CosineTheoremAngle(float a,float b, float c);
 float CosineTheoremSide(float a,float b, float phi);
 float QuadEqSolution(float a ,float b, float c);
 float rad2deg(float rad);
 float deg2rad(float degrees);
-template <int MatCols, typename type>
-std::vector<float> BLAMatrix2stdVector(const BLA::Matrix<1, MatCols, type> &Mat)
-{
 
-    std::vector<float> ret(MatCols);
-
-    for (int i = 0; i < MatCols; i++)
-    {
-        ret[i] = Mat(0, i);
-    }
-    return ret;
-}
 
 template <int MatRows, int MatCols>
 BLA::Matrix<MatCols, MatRows> BLApseudoInverse(const BLA::Matrix<MatRows, MatCols> &Mat)

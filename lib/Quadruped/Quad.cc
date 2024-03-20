@@ -8,7 +8,7 @@ Quad::Quad(/* args */)
       traj(Trajectory(1, -14))
 {
     initHardware();
-    dt_walk = {0, 2.0 / 4, 1.0 / 4, 3.0 / 4};
+    // dt_walk = {0, 2.0 / 4, 1.0 / 4, 3.0 / 4};
 }
 
 Quad::~Quad()
@@ -57,10 +57,10 @@ void Quad::gait(double &t_time)
     // Serial.print(dt_walk[0]);
     // Serial.print(dt_walk[1]);
 
-    Serial.print(traj.get_position(t_time + traj.get_T() * dt_walk[0])(0, 2), 5);
-    Serial.print(traj.get_position(t_time + traj.get_T() * dt_walk[1])(0, 2), 5);
-    Serial.print(traj.get_position(t_time + traj.get_T() * dt_walk[2])(0, 2), 5);
-    Serial.print(traj.get_position(t_time + traj.get_T() * dt_walk[3])(0, 2), 5);
+    // Serial.print(traj.get_position(t_time + traj.get_T() * dt_walk[0])(0, 2), 5);
+    // Serial.print(traj.get_position(t_time + traj.get_T() * dt_walk[1])(0, 2), 5);
+    // Serial.print(traj.get_position(t_time + traj.get_T() * dt_walk[2])(0, 2), 5);
+    // Serial.print(traj.get_position(t_time + traj.get_T() * dt_walk[3])(0, 2), 5);
 
     Serial.println();
 }

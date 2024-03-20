@@ -1,7 +1,6 @@
 #pragma once
 
 #include <BasicLinearAlgebra.h>
-#include <vector>
 #include "polynomials.h"
 
 class Turn
@@ -22,13 +21,13 @@ private:
     float x,y; 
     float phi=0.261799388;
 
-    std::vector<float> P_x_coeffs;
-    std::vector<float> P_y_coeffs;
-    std::vector<float> Pd_x_coeffs;
-    std::vector<float> Pd_y_coeffs;
-    std::vector<float> P_z_coeffs;
-    std::vector<float> Pd_z_coeffs;
-    /// @brief calculates the trajectory's polynomials
+    // std::vector<float> P_x_coeffs;
+    // std::vector<float> P_y_coeffs;
+    // std::vector<float> Pd_x_coeffs;
+    // std::vector<float> Pd_y_coeffs;
+    // std::vector<float> P_z_coeffs;
+    // std::vector<float> Pd_z_coeffs;
+    // /// @brief calculates the trajectory's polynomials
     void calculate_trajectory();
 
 public:
