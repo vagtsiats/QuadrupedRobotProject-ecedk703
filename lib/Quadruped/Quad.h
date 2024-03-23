@@ -6,7 +6,7 @@
 class Quad
 {
 private:
-
+    Leg br;
     Leg bl;
     Leg fr;
     Leg fl;
@@ -18,7 +18,6 @@ private:
 
 public:
     void initHardware();
-    Leg br;
 
     Quad(/* args */);
     ~Quad();
