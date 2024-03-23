@@ -76,7 +76,7 @@ void Leg::updateTranslations(BLA::Matrix<3> t_theta)
     return;
 }
 
-Matrix<3> Leg::getEndEffectorPosition()
+const Matrix<3> Leg::getEndEffectorPosition()
 {
     return pe;
 }
@@ -92,18 +92,28 @@ void Leg::computeJacobian()
     return;
 }
 
-Matrix<6, 3> Leg::getJacobian()
+const Matrix<6, 3> Leg::getJacobian()
 {
     return Jacobian;
 }
 
-Matrix<3, 3> Leg::getJacobianPos()
+const Matrix<3, 3> Leg::getJacobianPos()
 {
     return Jp;
 }
 
+const BLA::Matrix<3> Leg::getTheta()
+{
+    return theta;
+}
+
+void Leg::setTheta(BLA::Matrix<3> t_theta)
+{
+    theta = t_theta;
+}
+
 // void Leg::JInvIK(Matrix<3> theta0, Matrix<3> xd, Matrix<3> xd_dot)
-void Leg::JInvIK(BLA::Matrix<3> x_des, BLA::Matrix<3> xd_des, BLA::Matrix<3, 3> t_gain, float t_dt, BLA::Matrix<3> t_initial_configuration)
+const BLA::Matrix<3> Leg::JInvIK(BLA::Matrix<3> x_des, BLA::Matrix<3> xd_des, BLA::Matrix<3, 3> t_gain, float t_dt, BLA::Matrix<3> t_initial_configuration)
 {
     if (initialisation)
     {
@@ -113,13 +123,12 @@ void Leg::JInvIK(BLA::Matrix<3> x_des, BLA::Matrix<3> xd_des, BLA::Matrix<3, 3> 
 
     // For theta 0 -pi/4 -pi/4 -> 7.95 0 -9.95 so we want to move on the z axis only with inverse dif kinematics:
     Matrix<3> error = x_des - getEndEffectorPosition();
-    theta += (Inverse(getJacobianPos()) * (xd_des + t_gain * error)) * t_dt;
+    theta += (BLApseudoInverse(getJacobianPos()) * (xd_des + t_gain * error)) * t_dt;
 
-    // BLAprintMatrix(getEndEffectorPosition());
-    // BLAprintMatrix(error);
+    return error;
 }
 
-void Leg::JTranspIK(BLA::Matrix<3> x_des, BLA::Matrix<3, 3> t_gain, float t_dt, BLA::Matrix<3> t_initial_configuration)
+const BLA::Matrix<3> Leg::JTranspIK(BLA::Matrix<3> x_des, BLA::Matrix<3, 3> t_gain, float t_dt, BLA::Matrix<3> t_initial_configuration)
 {
 
     if (initialisation)
@@ -132,8 +141,7 @@ void Leg::JTranspIK(BLA::Matrix<3> x_des, BLA::Matrix<3, 3> t_gain, float t_dt, 
 
     theta += (~(getJacobianPos()) * (t_gain * error)) * t_dt;
 
-    // BLAprintMatrix(getEndEffectorPosition());
-    // BLAprintMatrix(error);
+    return error;
 }
 
 Matrix<3> Leg::InverseKinematics(Matrix<3> pos)

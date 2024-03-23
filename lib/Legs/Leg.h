@@ -22,11 +22,16 @@ public:
 
     void update_leg(const BLA::Matrix<3> &theta);
 
-    BLA::Matrix<3> getEndEffectorPosition();
+    const BLA::Matrix<3> getEndEffectorPosition();
 
-    BLA::Matrix<6, 3> getJacobian();
+    const BLA::Matrix<6, 3> getJacobian();
 
-    BLA::Matrix<3, 3> getJacobianPos();
+    const BLA::Matrix<3, 3> getJacobianPos();
+
+    /// @return servo positions in radians {shoulder, knee, ankle}
+    const BLA::Matrix<3> getTheta();
+
+    void setTheta(BLA::Matrix<3> t_theta);
 
     /// @brief Inverse Kinematics Algorithm with Jacobian Inverse. Used for following a desired trajectory
     /// @param x_des desired position {x,y,z}
@@ -34,14 +39,16 @@ public:
     /// @param t_gain 3by3 diagonal gain matrix
     /// @param t_dt
     /// @param t_initial_configuration
-    void JInvIK(BLA::Matrix<3> x_des, BLA::Matrix<3> xd_des, BLA::Matrix<3, 3> t_gain, float t_dt, BLA::Matrix<3> initial_configuration = {0, 0, 0});
+    /// @returns the error
+    const BLA::Matrix<3> JInvIK(BLA::Matrix<3> x_des, BLA::Matrix<3> xd_des, BLA::Matrix<3, 3> t_gain, float t_dt, BLA::Matrix<3> initial_configuration = {0, 0, 0});
 
     /// @brief Inverse Kinematics Algorithm with Jacobian Transpose. Used for initializing the leg position (maybe removed)?
     /// @param x_d desired position {x,y,z}
     /// @param t_gain 3by3 diagonal gain matrix
     /// @param t_dt
     /// @param t_initial_configuration default = {0,0,0}
-    void JTranspIK(BLA::Matrix<3> x_des, BLA::Matrix<3, 3> t_gain, float t_dt, BLA::Matrix<3> t_initial_configuration = {0, 0, 0});
+    /// @returns the error
+    const BLA::Matrix<3> JTranspIK(BLA::Matrix<3> x_des, BLA::Matrix<3, 3> t_gain, float t_dt, BLA::Matrix<3> t_initial_configuration = {0, 0, 0});
 
     /// @brief closed form IK
     /// @param pos desired position {x,y,z}
@@ -107,5 +114,7 @@ private:
     BLA::Matrix<6, 3> Jacobian;
 
     bool initialisation = true;
+
+    /// @brief servo positions in radians {shoulder, knee, ankle}
     BLA::Matrix<3> theta;
 };
