@@ -33,12 +33,14 @@ void Leg::setDh(BLA::Matrix<3> t_dh_a, BLA::Matrix<3> t_dh_alpha, BLA::Matrix<3>
     dh_alpha = t_dh_alpha;
     dh_d = t_dh_d;
 }
-
-void Leg::DriveLeg(int t_shoulder, int t_knee, int t_ankle)
+/// @brief 
+/// @param theta in rad
+void Leg::DriveLeg(Matrix<3> theta)
 {
-    shoulder.write(polar[0] * (rad2deg(t_shoulder) - zeros[0]));
-    knee.write(polar[1] * (rad2deg(t_knee) - zeros[1]));
-    ankle.write(polar[2] * (rad2deg(t_ankle) - zeros[2]));
+
+    shoulder.write(polar[0] * (rad2deg(theta(0)) + zeros[0]));
+    knee.write(polar[1] * (rad2deg(theta(1)) + zeros[1]));
+    ankle.write(polar[2] * (rad2deg(theta(2)) + zeros[2]));
 }
 
 void Leg::update_leg(const BLA::Matrix<3> &t_theta)
@@ -138,6 +140,9 @@ const BLA::Matrix<3> Leg::JTranspIK(BLA::Matrix<3> x_des, BLA::Matrix<3, 3> t_ga
     }
 
     Matrix<3> error = x_des - getEndEffectorPosition();
+
+    // For theta 0 -pi/4 -pi/4 -> 7.95 0 -9.95 so we want to move on the z axis only with inverse dif kinematics:
+    Matrix<3> error = x_d - forwardKinematics();
 
     theta += (~(getJacobianPos()) * (t_gain * error)) * t_dt;
 

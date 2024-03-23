@@ -12,6 +12,13 @@ public:
 
     void setDh(BLA::Matrix<3> t_dh_a, BLA::Matrix<3> t_dh_alpha, BLA::Matrix<3> t_dh_d);
 
+    void setBodyT(BLA::Matrix<4, 4> t_body_T);
+
+    void DriveLeg(BLA::Matrix <3> theta);
+
+    BLA::Matrix<3> getDh(int a);
+
+    BLA::Matrix<4, 4> dhTransform(float a, float alpha, float d, float theta);
     void attach_servos();
 
     /// @brief Drive leg servos
@@ -117,4 +124,5 @@ private:
 
     /// @brief servo positions in radians {shoulder, knee, ankle}
     BLA::Matrix<3> theta;
+
 };
