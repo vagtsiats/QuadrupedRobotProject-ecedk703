@@ -141,9 +141,6 @@ const BLA::Matrix<3> Leg::JTranspIK(BLA::Matrix<3> x_des, BLA::Matrix<3, 3> t_ga
 
     Matrix<3> error = x_des - getEndEffectorPosition();
 
-    // For theta 0 -pi/4 -pi/4 -> 7.95 0 -9.95 so we want to move on the z axis only with inverse dif kinematics:
-    Matrix<3> error = x_d - forwardKinematics();
-
     theta += (~(getJacobianPos()) * (t_gain * error)) * t_dt;
 
     return error;

@@ -18,7 +18,6 @@ public:
 
     BLA::Matrix<3> getDh(int a);
 
-    BLA::Matrix<4, 4> dhTransform(float a, float alpha, float d, float theta);
     void attach_servos();
 
     /// @brief Drive leg servos
