@@ -33,11 +33,9 @@ void Leg::setDh(BLA::Matrix<3> t_dh_a, BLA::Matrix<3> t_dh_alpha, BLA::Matrix<3>
     dh_alpha = t_dh_alpha;
     dh_d = t_dh_d;
 }
-/// @brief 
-/// @param theta in rad
-void Leg::DriveLeg(Matrix<3> theta)
-{
 
+void Leg::DriveLeg()
+{
     shoulder.write(polar[0] * (rad2deg(theta(0)) + zeros[0]));
     knee.write(polar[1] * (rad2deg(theta(1)) + zeros[1]));
     ankle.write(polar[2] * (rad2deg(theta(2)) + zeros[2]));

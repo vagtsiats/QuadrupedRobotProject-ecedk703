@@ -14,17 +14,11 @@ public:
 
     void setBodyT(BLA::Matrix<4, 4> t_body_T);
 
-    void DriveLeg(BLA::Matrix <3> theta);
+    void DriveLeg();
 
     BLA::Matrix<3> getDh(int a);
 
     void attach_servos();
-
-    /// @brief Drive leg servos
-    /// @param t_shoulder
-    /// @param t_knee
-    /// @param t_ankle
-    void DriveLeg(int t_shoulder, int t_knee, int t_ankle);
 
     void update_leg(const BLA::Matrix<3> &theta);
 
@@ -123,5 +117,4 @@ private:
 
     /// @brief servo positions in radians {shoulder, knee, ankle}
     BLA::Matrix<3> theta;
-
 };

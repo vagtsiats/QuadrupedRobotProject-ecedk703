@@ -16,6 +16,9 @@ double timer1;   // general purpose timer
 
 // Quad Robot;
 
-Leg testleg = Leg(47, 45, 43, {90, 90, 90}, {1, 1, 1});
+Leg testleg = Leg(43, 45, 47, {75, 60, 100}, {1, 1, 1});
 
-Trajectory testtraj = Trajectory(1, -14);
+Matrix<3> init_error = {100, 100, 100};
+float min_error = 0.05;
+
+Trajectory testtraj = Trajectory(-3, -14);
