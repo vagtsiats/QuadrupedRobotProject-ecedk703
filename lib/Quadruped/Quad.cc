@@ -7,7 +7,8 @@ Quad::Quad(/* args */)
       fl(47, 45, 43, {90, 90, 90}, {1, 1, 1}),
       traj(Trajectory(1, -14))
 {
-    dt_walk = {0, 2.0 / 4, 1.0 / 4, 3.0 / 4};
+    walk_dt = {0, 2.0 / 4, 1.0 / 4, 3.0 / 4};
+    walk_gain = BLAdiagonal<3>(5);
 }
 
 Quad::~Quad()
@@ -51,21 +52,10 @@ void Quad::initHardware()
     fl.DriveLeg(init_th);
 }
 
-// TODO - add leg inverse kinematics algorithm
-void Quad::gait(double &t_time)
+void Quad::gait(const double &t_time, float looptime)
 {
-    // BLAprintMatrix(traj.get_position(t_time + dt_walk[0]));
-    // BLAprintMatrix(traj.get_position(t_time + dt_walk[1]));
-    // BLAprintMatrix(traj.get_position(t_time + dt_walk[2]));
-    // BLAprintMatrix(traj.get_position(t_time + dt_walk[3]));
-
-    // Serial.print(dt_walk[0]);
-    // Serial.print(dt_walk[1]);
-
-    Serial.print(traj.get_position(t_time + traj.get_T() * dt_walk[0])(0, 2), 5);
-    Serial.print(traj.get_position(t_time + traj.get_T() * dt_walk[1])(0, 2), 5);
-    Serial.print(traj.get_position(t_time + traj.get_T() * dt_walk[2])(0, 2), 5);
-    Serial.print(traj.get_position(t_time + traj.get_T() * dt_walk[3])(0, 2), 5);
-
-    Serial.println();
+    fl.JInvIK(traj.get_position(t_time + traj.get_T() * walk_dt[0]), traj.get_velocity(t_time + traj.get_T() * walk_dt[0]), walk_gain, looptime);
+    fr.JInvIK(traj.get_position(t_time + traj.get_T() * walk_dt[1]), traj.get_velocity(t_time + traj.get_T() * walk_dt[1]), walk_gain, looptime);
+    bl.JInvIK(traj.get_position(t_time + traj.get_T() * walk_dt[2]), traj.get_velocity(t_time + traj.get_T() * walk_dt[2]), walk_gain, looptime);
+    br.JInvIK(traj.get_position(t_time + traj.get_T() * walk_dt[3]), traj.get_velocity(t_time + traj.get_T() * walk_dt[3]), walk_gain, looptime);
 }
