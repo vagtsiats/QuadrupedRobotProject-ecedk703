@@ -41,6 +41,12 @@ void Leg::DriveLeg()
     ankle.write(polar[2] * (rad2deg(theta(2)) + zeros[2]));
 }
 
+void Leg::DriveLeg(BLA::Matrix<3> th)
+{
+    setTheta(th);
+    DriveLeg();
+}
+
 void Leg::update_leg(const BLA::Matrix<3> &t_theta)
 {
     updateTranslations(t_theta);

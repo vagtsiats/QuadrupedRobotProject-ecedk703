@@ -43,6 +43,12 @@ void Quad::initHardware()
 
     fl.setDh(fl_dh_a, fl_dh_alpha, fl_dh_d);
     fl.attach_servos();
+
+    BLA::Matrix<3> init_th = {0, 0, 0};
+    br.DriveLeg(init_th);
+    bl.DriveLeg(init_th);
+    fr.DriveLeg(init_th);
+    fl.DriveLeg(init_th);
 }
 
 // TODO - add leg inverse kinematics algorithm

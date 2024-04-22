@@ -14,7 +14,12 @@ public:
 
     void setBodyT(BLA::Matrix<4, 4> t_body_T);
 
+    /// @brief implicitly drive leg servos to computed angles
     void DriveLeg();
+
+    /// @brief explicitly drive leg servos to given angles
+    /// @param desired angles
+    void DriveLeg(BLA::Matrix<3> th);
 
     BLA::Matrix<3> getDh(int a);
 

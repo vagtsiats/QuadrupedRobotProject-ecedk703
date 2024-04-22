@@ -14,6 +14,10 @@ void setup()
 
     testleg.attach_servos();
 
+    testleg.setTheta({0, 0, 0});
+    testleg.DriveLeg();
+    delay(1000);
+
     timer0 = micros();
 }
 
