@@ -22,21 +22,17 @@ void setup()
 
 void loop()
 {
-    timer1 = millis();
 
     // SECTION - constant time loop :
     if (millis() - timer0 >= LOOP_PERIODms)
     {
         timer0 = millis();
 
-        Matrix<3> x_d = testtraj.get_position(timer1 / 1e3);
-        Matrix<3> xd_d = testtraj.get_velocity(timer1 / 1e3);
-
         if ((abs(init_error(1)) > min_error) || (abs(init_error(1)) > min_error) || (abs(init_error(2)) > min_error))
         {
             init_error = testleg.JTranspIK(testtraj.get_position(0), BLAdiagonal<3>(0.01), LOOP_PERIODsec);
             timer2 = millis();
-            BLAprintMatrix(init_error);
+            // BLAprintMatrix(init_error);
         }
         else if (initialization)
         {
@@ -44,18 +40,23 @@ void loop()
             {
                 Serial.println("Init_done");
                 initialization = false;
+                timer1 = millis();
             }
         }
+
+        Matrix<3> x_d = testtraj.get_position((millis() - timer1) / 1e3);
+        Matrix<3> xd_d = testtraj.get_velocity((millis() - timer1) / 1e3);
 
         if (!initialization)
         {
             testleg.JInvIK(x_d, xd_d, BLAdiagonal<3>(5), LOOP_PERIODsec);
         }
 
-        // BLAprintMatrix(testleg.getEndEffectorPosition());
+        BLAprintMatrix(testleg.getEndEffectorPosition());
+        BLAprintMatrix(x_d);
         // BLAprintMatrix(testleg.getTheta());
 
-        // Serial.println();
+        Serial.println();
     }
     //! SECTION
 
