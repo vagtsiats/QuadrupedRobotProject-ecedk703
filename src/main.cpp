@@ -14,44 +14,50 @@ void setup()
 
     testleg.attach_servos();
 
-    testleg.setTheta({0, 0, 0});
-    testleg.DriveLeg();
+    testleg.DriveLeg({0, 0, 0});
     delay(1000);
 
-    timer0 = micros();
+    timer0 = millis();
 }
 
 void loop()
 {
-    uint32_t timer1 = micros(); // in micros
-    float t_sec = timer1 / 1e6;
-
-    float leg_sample_time = fmod(t_sec, testtraj.get_T());
-
-    Matrix<3> x_d = testtraj.get_position(leg_sample_time);
-    Matrix<3> xd_d = testtraj.get_velocity(leg_sample_time);
+    timer1 = millis();
 
     // SECTION - constant time loop :
-    if (micros() - timer0 >= LOOP_PERIODms)
+    if (millis() - timer0 >= LOOP_PERIODms)
     {
-        timer0 = micros();
+        timer0 = millis();
 
-        if (init_error(1) > min_error && init_error(1) > min_error && init_error(2) > min_error)
+        Matrix<3> x_d = testtraj.get_position(timer1 / 1e3);
+        Matrix<3> xd_d = testtraj.get_velocity(timer1 / 1e3);
+
+        if ((abs(init_error(1)) > min_error) || (abs(init_error(1)) > min_error) || (abs(init_error(2)) > min_error))
         {
-            init_error = testleg.JTranspIK(testtraj.get_position(0), BLAdiagonal<3>(1), LOOP_PERIODsec);
+            init_error = testleg.JTranspIK(testtraj.get_position(0), BLAdiagonal<3>(0.01), LOOP_PERIODsec);
+            timer2 = millis();
+            BLAprintMatrix(init_error);
         }
-        else
+        else if (initialization)
         {
-            testleg.JInvIK(x_d, xd_d, BLAdiagonal<3>(5), LOOP_PERIODsec, testtraj.get_position(0));
+            if (millis() - timer2 > 2e3)
+            {
+                Serial.println("Init_done");
+                initialization = false;
+            }
+        }
+
+        if (!initialization)
+        {
+            testleg.JInvIK(x_d, xd_d, BLAdiagonal<3>(5), LOOP_PERIODsec);
         }
 
         // BLAprintMatrix(testleg.getEndEffectorPosition());
-        // BLAprintMatrix(error);
-        // BLAprintMatrix(testleg.getTheta());s
+        // BLAprintMatrix(testleg.getTheta());
+
         // Serial.println();
     }
-
-    // testleg.setTheta({0, 0, 0});
+    //! SECTION
 
     testleg.DriveLeg();
     testleg.update_leg(testleg.getTheta()); // a bit odd. Check definition of update_leg. Generally define the  "theta" pipeline
