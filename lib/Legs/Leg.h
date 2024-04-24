@@ -112,8 +112,11 @@ private:
     BLA::Matrix<4, 4> T01;
     BLA::Matrix<4, 4> T12;
     BLA::Matrix<4, 4> T23;
+    BLA::Matrix<4, 4> T34;
+
     BLA::Matrix<4, 4> T02;
     BLA::Matrix<4, 4> T03;
+    BLA::Matrix<4, 4> T04;
 
     BLA::Matrix<3> z0;
     BLA::Matrix<3> z1;

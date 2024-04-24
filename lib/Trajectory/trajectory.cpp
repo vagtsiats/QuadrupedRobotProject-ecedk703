@@ -2,7 +2,7 @@
 
 Trajectory::Trajectory(float t_vd, float t_y0) : vd(t_vd), y0(t_y0)
 {
-    y1 = 2;
+    y1 = 5;
     calculate_trajectory();
 }
 

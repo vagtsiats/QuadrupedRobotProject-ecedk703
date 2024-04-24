@@ -15,8 +15,8 @@ Leg::Leg(int t_pin_shoulder, int t_pin_knee, int t_pin_ankle, const std::vector<
     }
 
     BaseFrameTranslation = {0, 0, 1, 0,
-                            0, 1, 0, 0,
-                            -1, 0, 0, 0,
+                            0 ,1, 0, 0,
+                            -1 ,0, 0, 0,
                             0, 0, 0, 1};
 }
 
@@ -35,7 +35,7 @@ void Leg::setDh(BLA::Matrix<3> t_dh_a, BLA::Matrix<3> t_dh_alpha, BLA::Matrix<3>
 }
 
 void Leg::DriveLeg()
-{
+{   
     shoulder.write(polar[0] * rad2deg(theta(0)) + zeros[0]);
     knee.write(polar[1] * rad2deg(theta(1)) + zeros[1]);
     ankle.write(polar[2] *rad2deg(theta(2)) + zeros[2]);
@@ -74,11 +74,15 @@ Matrix<4, 4> Leg::dhTransform(float a, float alpha, float d, float theta)
 void Leg::updateTranslations(BLA::Matrix<3> t_theta)
 {
     T01 = BaseFrameTranslation * dhTransform(dh_a(0), dh_alpha(0), dh_d(0), theta(0));
+    // T01 =dhTransform(dh_a(0), dh_alpha(0), dh_d(0), theta(0));
+
     T12 = dhTransform(dh_a(1), dh_alpha(1), dh_d(1), theta(1));
     T23 = dhTransform(dh_a(2), dh_alpha(2), dh_d(2), theta(2));
+    // T34 = dhTransform(dh_a(3), dh_alpha(3), dh_d(3),theta(2));
+
     T02 = T01 * T12;
     T03 = T02 * T23;
-
+    // T04=  T03 * T34;
     return;
 }
 
