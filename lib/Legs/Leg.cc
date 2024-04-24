@@ -36,9 +36,9 @@ void Leg::setDh(BLA::Matrix<3> t_dh_a, BLA::Matrix<3> t_dh_alpha, BLA::Matrix<3>
 
 void Leg::DriveLeg()
 {
-    shoulder.write(polar[0] * (rad2deg(theta(0)) + zeros[0]));
-    knee.write(polar[1] * (rad2deg(theta(1)) + zeros[1]));
-    ankle.write(polar[2] * (rad2deg(theta(2)) + zeros[2]));
+    shoulder.write(polar[0] * rad2deg(theta(0)) + zeros[0]);
+    knee.write(polar[1] * rad2deg(theta(1)) + zeros[1]);
+    ankle.write(polar[2] *rad2deg(theta(2)) + zeros[2]);
 }
 
 void Leg::DriveLeg(BLA::Matrix<3> th)

@@ -1,6 +1,6 @@
 #include "definitions.h"
 using namespace BLA;
-
+#define TEST
 void setup()
 {
     Serial.begin(9600);
@@ -13,8 +13,9 @@ void setup()
     testleg.setDh(fl_dh_a, fl_dh_alpha, fl_dh_d);
 
     testleg.attach_servos();
+    //CAREFUL ITS IN RAD
 
-    testleg.DriveLeg({0, 0, 0});
+    testleg.DriveLeg({0, 0,0});
     delay(1000);
 
     timer0 = millis();
@@ -22,7 +23,9 @@ void setup()
 
 void loop()
 {
-
+    #ifdef TEST
+    Serial.print("ok");
+    #else
     // SECTION - constant time loop :
     if (millis() - timer0 >= LOOP_PERIODms)
     {
@@ -59,7 +62,7 @@ void loop()
         Serial.println();
     }
     //! SECTION
-
+    #endif
     testleg.DriveLeg();
     testleg.update_leg(testleg.getTheta()); // a bit odd. Check definition of update_leg. Generally define the  "theta" pipeline
 }

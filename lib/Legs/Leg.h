@@ -8,6 +8,12 @@
 class Leg
 {
 public:
+    /// @brief 
+    /// @param t_pin_shoulder 
+    /// @param t_pin_knee 
+    /// @param t_pin_ankle 
+    /// @param t_zeros 
+    /// @param t_polar 
     Leg(int t_pin_shoulder, int t_pin_knee, int t_pin_ankle, const std::vector<float> &t_zeros, const std::vector<float> &t_polar);
 
     void setDh(BLA::Matrix<3> t_dh_a, BLA::Matrix<3> t_dh_alpha, BLA::Matrix<3> t_dh_d);
