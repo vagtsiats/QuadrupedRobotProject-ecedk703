@@ -13,10 +13,15 @@ private:
 
     Trajectory traj;
 
-    // NOTE - walking gait timing {FL, FR, BL, BR}
-    std::vector<double> walk_dt;
+    float body_height;
+    float Tsw;
 
-    BLA::Matrix<3, 3> walk_gain;
+    // NOTE - gait timing {FL, FR, BL, BR}
+    std::vector<double> walk_dt;
+    std::vector<double> trot_dt;
+    std::vector<double> dt;
+
+    BLA::Matrix<3, 3> gait_gain;
 
 public:
     void
@@ -25,5 +30,11 @@ public:
     Quad(/* args */);
     ~Quad();
 
-    void gait(const double &t_time, float looptime);
+    void set_velocity(float t_vd);
+
+    void init_walk(float vd);
+    void init_trot(float vd);
+
+    void walk(const double &t_time, float t_looptime);
+    void trot(const double &t_time, float t_looptime);
 };
