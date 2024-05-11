@@ -22,4 +22,8 @@ Matrix<3> init_error = {100, 100, 100};
 float min_error = 1;
 bool initialization = true;
 
-Trajectory testtraj = Trajectory(4, -20);
+float vd = 4;
+float Tsw = 0.5;
+float L = 3 * Tsw * vd;
+
+Trajectory testtraj = Trajectory(vd, 20, Tsw, L);
