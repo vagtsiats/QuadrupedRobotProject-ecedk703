@@ -153,25 +153,35 @@ const BLA::Matrix<3> Leg::JTranspIK(BLA::Matrix<3> x_des, BLA::Matrix<3, 3> t_ga
 
     return error;
 }
-
+//DONE
 Matrix<3> Leg::InverseKinematics(Matrix<3> pos)
 {
     float x = pos(0);
     float y = pos(1);
-    float z = pos(2);
+    float z = -pos(2);
     Matrix<3> theta;
-    theta(0) = atan(y / x);
-    float c1 = cos(theta(0));
+    float l1=5;
+    float l2=11;
+    float l3=13;
+    
+    float A=sqrt(z*z+y*y);
+    float a1=atan2(y , z);
+    float a3=M_PI_2-asin(l1/A);
 
-    float R = sqrt(pow(x / c1 - dh_a(0), 2) + pow(z, 2));
-    float R2 = acos((pow(dh_a(1), 2) + pow(R, 2) - pow(dh_a(2), 2)) / (2 * dh_a(1) * R));
-    float R3 = acos((pow(dh_a(1), 2) + pow(dh_a(2), 2) - pow(R, 2)) / (2 * dh_a(1) * dh_a(2)));
-    float b2 = atan(z / (x / c1 - dh_a(0)));
+    theta(0) =a1+a3- M_PI_2;
 
-    theta(1) = -R2 + b2;
+    float c1=cos(theta(0));
+    float s1=sin(theta(0));
+    float z1=z+l1*s1;
+    z=z1/c1;
 
-    theta(2) = M_PI - R3;
+    float A2=sqrt(z*z+x*x);
+    float R1=atan2(x,z);
+    float R2=CosineTheoremAngle(A2,l2,l3);
+    theta(1)=R2-R1;
 
+    float R3=CosineTheoremAngle(l2,l3,A2);
+    theta(2)=M_PI-R3;
     return theta;
 }
 

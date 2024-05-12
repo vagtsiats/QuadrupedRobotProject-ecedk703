@@ -26,7 +26,7 @@ private:
 public:
     /// @brief Initializes a trajectory for the legs
     /// @param t_vd desired velocity
-    /// @param t_y0 body distance from the ground
+    /// @param t_y0 body distance from the ground -> has to be positive values 
     /// @param t_Tsw swing time in seconds
     /// @param t_L step length
     Trajectory(float t_vd, float t_y0, float t_Tsw, float t_L);

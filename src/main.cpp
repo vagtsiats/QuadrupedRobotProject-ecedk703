@@ -1,6 +1,6 @@
 #include "definitions.h"
 using namespace BLA;
-// #define TEST
+#define TEST
 void setup()
 {
     Serial.begin(9600);
@@ -14,11 +14,11 @@ void setup()
     testleg.setDh(fl_dh_a, fl_dh_alpha, fl_dh_d);
 
     testleg.attach_servos();
-    // CAREFUL ITS IN RAD
 
-    // testleg.setTheta({0.3,0,0});
-    testleg.DriveLeg({0.2, -0.08, 0.47});
-    testleg.DriveLeg({0, 0, 0});
+    // CAREFUL ITS IN RAD
+    testleg.setTheta({0.3,0,0});
+    // testleg.DriveLeg({0.2, -0.08, 0.47});
+    // testleg.DriveLeg({0, 0, 0});
 
     delay(1000);
 
@@ -29,6 +29,9 @@ void loop()
 {
 
 #ifdef TEST
+    Matrix<3> thetaIK=testleg.InverseKinematics({0,11.87,-21.45});
+    testleg.DriveLeg(thetaIK);
+    BLAprintMatrix(thetaIK);
     BLAprintMatrix(testleg.getEndEffectorPosition());
 #else
     // SECTION - constant time loop :

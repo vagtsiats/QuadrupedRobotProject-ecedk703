@@ -11,7 +11,7 @@ Quad::Quad(/* args */)
 {
     // NOTE - gait timing {FL, FR, BL, BR}
     walk_dt = {0, 2. / 4, 1. / 4, 3. / 4};
-    walk_dt = {0, 1. / 2, 1. / 2, 0};
+    trot_dt = {0, 1. / 2, 1. / 2, 0};
 
     gait_gain = BLAdiagonal<3>(5);
 }
@@ -58,12 +58,16 @@ void Quad::initHardware()
     fl.DriveLeg(init_th);
 }
 
-void Quad::init_walk(float vd)
+void Quad::init_trot(float vd)
 {
     traj = Trajectory(vd, body_height, Tsw, 3 * Tsw * vd);
     dt = trot_dt;
 
-    // TODO - Add inverse kinematics
+    br.DriveLeg(br.InverseKinematics(traj.get_position(0)));
+    fr.DriveLeg(fr.InverseKinematics(traj.get_position(0)));
+    bl.DriveLeg(bl.InverseKinematics(traj.get_position(0)));
+    fl.DriveLeg(fl.InverseKinematics(traj.get_position(0)));
+
 }
 
 void Quad::init_walk(float vd)
@@ -71,7 +75,10 @@ void Quad::init_walk(float vd)
     traj = Trajectory(vd, body_height, Tsw, Tsw * vd);
     dt = walk_dt;
 
-    // TODO - Add inverse kinematics
+    br.DriveLeg(br.InverseKinematics(traj.get_position(0)));
+    fr.DriveLeg(fr.InverseKinematics(traj.get_position(0)));
+    bl.DriveLeg(bl.InverseKinematics(traj.get_position(0)));
+    fl.DriveLeg(fl.InverseKinematics(traj.get_position(0)));
 }
 
 void Quad::walk(const double &t_time, float t_looptime)
