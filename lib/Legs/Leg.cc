@@ -165,7 +165,7 @@ Matrix<3> Leg::InverseKinematics(Matrix<3> pos)
     float l3=13;
     
     float A=sqrt(z*z+y*y);
-    float a1=atan2(y , z);
+    float a1=atan2(y,z);
     float a3=M_PI_2-asin(l1/A);
 
     theta(0) =a1+a3- M_PI_2;
@@ -178,10 +178,10 @@ Matrix<3> Leg::InverseKinematics(Matrix<3> pos)
     float A2=sqrt(z*z+x*x);
     float R1=atan2(x,z);
     float R2=CosineTheoremAngle(A2,l2,l3);
-    theta(1)=R2-R1;
+    theta(1)=-(R2-R1);
 
     float R3=CosineTheoremAngle(l2,l3,A2);
-    theta(2)=M_PI-R3;
+    theta(2)=(M_PI-R3);
     return theta;
 }
 
