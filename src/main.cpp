@@ -16,7 +16,7 @@ void setup()
     digitalWrite(LED_BUILTIN, 1);
     delay(1000);
 
-    timer0 = micros();
+    timer_0 = micros();
 }
 
 void loop()
