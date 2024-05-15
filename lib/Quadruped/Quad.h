@@ -26,16 +26,26 @@ private:
 
     BLA::Matrix<3, 3> gait_gain;
 
+    void drive_legs();
+
 public:
     void initHardware();
 
     Quad(/* args */);
     ~Quad();
 
-    // void set_velocity(float t_vd);
-
     void init_walk(float vd);
     void init_trot(float vd);
+
+    /// @brief Drive all legs to desired theta
+    /// @param q_fl
+    /// @param q_fr
+    /// @param q_bl
+    /// @param q_br
+    void drive_legs(BLA::Matrix<3> q_fl, BLA::Matrix<3> q_fr, BLA::Matrix<3> q_bl, BLA::Matrix<3> q_br);
+
+    /// @brief Drive all legs to desired position using IK
+    void drive_legs_IK(BLA::Matrix<3> p_fl, BLA::Matrix<3> p_fr, BLA::Matrix<3> p_bl, BLA::Matrix<3> p_br);
 
     void walk(const double &t_time, float t_looptime);
 };
