@@ -7,6 +7,7 @@ Quad::Quad(/* args */)
       fl(47, 45, 43, {90, 90, 90}, {1, 1, 1}),
       body_height(20),
       Tsw(0.5),
+      u(0),
       traj(Trajectory(1, body_height, Tsw, 3 * Tsw * 1))
 {
     // NOTE - gait timing {FL, FR, BL, BR}
@@ -61,30 +62,38 @@ void Quad::initHardware()
 void Quad::init_trot(float vd)
 {
     traj = Trajectory(vd, body_height, Tsw, 3 * Tsw * vd);
+    traj_T = traj.get_T();
     dt = trot_dt;
 
-    br.DriveLeg(br.InverseKinematics(traj.get_position(0)));
-    fr.DriveLeg(fr.InverseKinematics(traj.get_position(0)));
-    bl.DriveLeg(bl.InverseKinematics(traj.get_position(0)));
-    fl.DriveLeg(fl.InverseKinematics(traj.get_position(0)));
-
+    fl.DriveLeg(fl.InverseKinematics(traj.get_position(traj_T * (u + dt[0]))));
+    fr.DriveLeg(fr.InverseKinematics(traj.get_position(traj_T * (u + dt[1]))));
+    bl.DriveLeg(bl.InverseKinematics(traj.get_position(traj_T * (u + dt[2]))));
+    br.DriveLeg(br.InverseKinematics(traj.get_position(traj_T * (u + dt[3]))));
 }
 
 void Quad::init_walk(float vd)
 {
     traj = Trajectory(vd, body_height, Tsw, Tsw * vd);
+    traj_T = traj.get_T();
     dt = walk_dt;
 
-    br.DriveLeg(br.InverseKinematics(traj.get_position(0)));
-    fr.DriveLeg(fr.InverseKinematics(traj.get_position(0)));
-    bl.DriveLeg(bl.InverseKinematics(traj.get_position(0)));
-    fl.DriveLeg(fl.InverseKinematics(traj.get_position(0)));
+    fl.DriveLeg(fl.InverseKinematics(traj.get_position(traj_T * (u + dt[0]))));
+    fr.DriveLeg(fr.InverseKinematics(traj.get_position(traj_T * (u + dt[1]))));
+    bl.DriveLeg(bl.InverseKinematics(traj.get_position(traj_T * (u + dt[2]))));
+    br.DriveLeg(br.InverseKinematics(traj.get_position(traj_T * (u + dt[3]))));
 }
 
 void Quad::walk(const double &t_time, float t_looptime)
 {
-    fr.JInvIK(traj.get_position(t_time + traj.get_T() * dt[1]), traj.get_velocity(t_time + traj.get_T() * dt[1]), gait_gain, t_looptime);
-    bl.JInvIK(traj.get_position(t_time + traj.get_T() * dt[2]), traj.get_velocity(t_time + traj.get_T() * dt[2]), gait_gain, t_looptime);
-    fl.JInvIK(traj.get_position(t_time + traj.get_T() * dt[0]), traj.get_velocity(t_time + traj.get_T() * dt[0]), gait_gain, t_looptime);
-    br.JInvIK(traj.get_position(t_time + traj.get_T() * dt[3]), traj.get_velocity(t_time + traj.get_T() * dt[3]), gait_gain, t_looptime);
+    set_time(t_time);
+
+    fl.JInvIK(traj.get_position(traj_T * (u + dt[0])), traj.get_velocity(traj_T * (u + dt[0])), gait_gain, t_looptime);
+    fr.JInvIK(traj.get_position(traj_T * (u + dt[1])), traj.get_velocity(traj_T * (u + dt[1])), gait_gain, t_looptime);
+    bl.JInvIK(traj.get_position(traj_T * (u + dt[2])), traj.get_velocity(traj_T * (u + dt[2])), gait_gain, t_looptime);
+    br.JInvIK(traj.get_position(traj_T * (u + dt[3])), traj.get_velocity(traj_T * (u + dt[3])), gait_gain, t_looptime);
+}
+
+void Quad::set_time(const float &t_time)
+{
+    u = fmod(t_time, traj_T) / traj_T;
 }
