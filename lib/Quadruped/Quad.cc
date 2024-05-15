@@ -1,10 +1,10 @@
 #include "Quad.h"
 
 Quad::Quad(/* args */)
-    : br(5, 6, 7, {90, 90, 90}, {1, 1, 1}),
-      bl(2, 3, 4, {90, 90, 90}, {1, 1, 1}),
-      fr(53, 51, 49, {90, 90, 90}, {1, 1, 1}),
-      fl(47, 45, 43, {90, 90, 90}, {1, 1, 1}),
+    : br(16, 15, 14, {70, 92, 70}, {-1, 1, 1}),
+      bl(17, 18, 19, {95, 95, 130}, {-1, -1, -1}),
+      fr(11, 12, 13, {80, 92, 70}, {-1, 1, 1}),
+      fl(10, 9, 8, {100, 90, 125}, {-1, -1, -1}),
       body_height(20),
       Tsw(0.5),
       u(0),
@@ -48,11 +48,11 @@ void Quad::initHardware()
     fl.setDh(fl_dh_a, fl_dh_alpha, fl_dh_d);
     fl.attach_servos();
 
-    BLA::Matrix<3> init_th = {0, 0, 0};
-    br.driveLeg(init_th);
-    bl.driveLeg(init_th);
-    fr.driveLeg(init_th);
-    fl.driveLeg(init_th);
+    // BLA::Matrix<3> init_th = {0, 0, 0};
+    // br.driveLeg(init_th);
+    // bl.driveLeg(init_th);
+    // fr.driveLeg(init_th);
+    // fl.driveLeg(init_th);
 }
 
 void Quad::init_trot(float vd)

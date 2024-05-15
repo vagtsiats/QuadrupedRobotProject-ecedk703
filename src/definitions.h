@@ -15,7 +15,7 @@ uint32_t timer0; // constant loop timer
 uint32_t timer1; // general purpose timer used for trajectory
 uint32_t timer2; // init algorithm timer
 
-Matrix<3> conf = {0, 0, 0};
+Matrix<3> conf = {0, -0.5, 1};
 Matrix<3> pos = {0, 0, -20};
 
 Quad Robot;

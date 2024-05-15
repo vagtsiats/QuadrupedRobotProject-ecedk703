@@ -11,10 +11,8 @@ void setup()
     delay(2000);
 
     Robot.initHardware();
-    Robot.init_walk(1);
-
-    digitalWrite(LED_BUILTIN, 1);
-    delay(1000);
+    Robot.drive_legs(conf, conf, conf, conf);
+    // Robot.init_walk(1);
 
     timer0 = micros();
 }
@@ -23,9 +21,9 @@ void loop()
 {
 
 #ifdef TEST
-    // Robot.drive_legs({0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0});
+    // Robot.drive_legs(conf, conf, conf, conf);
 
-    Robot.drive_legs_IK(pos, pos, pos, pos);
+    // Robot.drive_legs_IK(pos, pos, pos, pos);
 
 #else
     // SECTION - constant time loop :

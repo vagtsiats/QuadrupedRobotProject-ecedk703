@@ -32,7 +32,6 @@ public:
     void initHardware();
 
     Quad(/* args */);
-    ~Quad();
 
     void init_walk(float vd);
     void init_trot(float vd);
