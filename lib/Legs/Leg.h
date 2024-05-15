@@ -8,12 +8,12 @@
 class Leg
 {
 public:
-    /// @brief 
-    /// @param t_pin_shoulder 
-    /// @param t_pin_knee 
-    /// @param t_pin_ankle 
-    /// @param t_zeros 
-    /// @param t_polar 
+    /// @brief
+    /// @param t_pin_shoulder
+    /// @param t_pin_knee
+    /// @param t_pin_ankle
+    /// @param t_zeros
+    /// @param t_polar
     Leg(int t_pin_shoulder, int t_pin_knee, int t_pin_ankle, const std::vector<float> &t_zeros, const std::vector<float> &t_polar);
 
     void setDh(BLA::Matrix<3> t_dh_a, BLA::Matrix<3> t_dh_alpha, BLA::Matrix<3> t_dh_d);
@@ -21,17 +21,15 @@ public:
     void setBodyT(BLA::Matrix<4, 4> t_body_T);
 
     /// @brief implicitly drive leg servos to computed angles
-    void DriveLeg();
+    void driveLeg();
 
     /// @brief explicitly drive leg servos to given angles
     /// @param desired angles
-    void DriveLeg(BLA::Matrix<3> th);
+    void driveLeg(BLA::Matrix<3> th);
 
     BLA::Matrix<3> getDh(int a);
 
     void attach_servos();
-
-    void update_leg(const BLA::Matrix<3> &theta);
 
     const BLA::Matrix<3> getEndEffectorPosition();
 
@@ -92,7 +90,10 @@ private:
     /// @brief computes Homogeneous transformation based on dh parameters
     BLA::Matrix<4, 4> dhTransform(float a, float alpha, float d, float theta);
 
-    void updateTranslations(BLA::Matrix<3> theta);
+    /// @brief computes fk and updates jacobians based on the current configuration
+    void update_leg();
+
+    void ForwardKinematics();
 
     void computeJacobian();
 
@@ -127,7 +128,7 @@ private:
     BLA::Matrix<3, 3> Jo;
     BLA::Matrix<6, 3> Jacobian;
 
-    bool initialisation = true;
+    bool initialisation = false;
 
     /// @brief servo positions in radians {shoulder, knee, ankle}
     BLA::Matrix<3> theta;

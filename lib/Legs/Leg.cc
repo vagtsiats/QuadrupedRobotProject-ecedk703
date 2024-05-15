@@ -15,8 +15,8 @@ Leg::Leg(int t_pin_shoulder, int t_pin_knee, int t_pin_ankle, const std::vector<
     }
 
     BaseFrameTranslation = {0, 0, 1, 0,
-                            0 ,1, 0, 0,
-                            -1 ,0, 0, 0,
+                            0, 1, 0, 0,
+                            -1, 0, 0, 0,
                             0, 0, 0, 1};
 }
 
@@ -34,22 +34,24 @@ void Leg::setDh(BLA::Matrix<3> t_dh_a, BLA::Matrix<3> t_dh_alpha, BLA::Matrix<3>
     dh_d = t_dh_d;
 }
 
-void Leg::DriveLeg()
-{   
+void Leg::driveLeg()
+{
     shoulder.write(polar[0] * rad2deg(theta(0)) + zeros[0]);
     knee.write(polar[1] * rad2deg(theta(1)) + zeros[1]);
-    ankle.write(polar[2] *rad2deg(theta(2)) + zeros[2]);
+    ankle.write(polar[2] * rad2deg(theta(2)) + zeros[2]);
+
+    update_leg();
 }
 
-void Leg::DriveLeg(BLA::Matrix<3> th)
+void Leg::driveLeg(BLA::Matrix<3> th)
 {
     setTheta(th);
-    DriveLeg();
+    driveLeg();
 }
 
-void Leg::update_leg(const BLA::Matrix<3> &t_theta)
+void Leg::update_leg()
 {
-    updateTranslations(t_theta);
+    ForwardKinematics();
 
     z0 = {BaseFrameTranslation(0, 2), BaseFrameTranslation(1, 2), BaseFrameTranslation(2, 2)};
     z1 = {T01(0, 2), T01(1, 2), T01(2, 2)};
@@ -71,18 +73,15 @@ Matrix<4, 4> Leg::dhTransform(float a, float alpha, float d, float theta)
     return T;
 }
 
-void Leg::updateTranslations(BLA::Matrix<3> t_theta)
+void Leg::ForwardKinematics()
 {
     T01 = BaseFrameTranslation * dhTransform(dh_a(0), dh_alpha(0), dh_d(0), theta(0));
-    // T01 =dhTransform(dh_a(0), dh_alpha(0), dh_d(0), theta(0));
-
     T12 = dhTransform(dh_a(1), dh_alpha(1), dh_d(1), theta(1));
     T23 = dhTransform(dh_a(2), dh_alpha(2), dh_d(2), theta(2));
-    // T34 = dhTransform(dh_a(3), dh_alpha(3), dh_d(3),theta(2));
 
     T02 = T01 * T12;
     T03 = T02 * T23;
-    // T04=  T03 * T34;
+
     return;
 }
 
@@ -153,35 +152,35 @@ const BLA::Matrix<3> Leg::JTranspIK(BLA::Matrix<3> x_des, BLA::Matrix<3, 3> t_ga
 
     return error;
 }
-//DONE
+// DONE
 Matrix<3> Leg::InverseKinematics(Matrix<3> pos)
 {
     float x = pos(0);
     float y = pos(1);
     float z = -pos(2);
-    Matrix<3> theta;
-    float l1=5;
-    float l2=11;
-    float l3=13;
-    
-    float A=sqrt(z*z+y*y);
-    float a1=atan2(y,z);
-    float a3=M_PI_2-asin(l1/A);
+    // Matrix<3> theta;
+    float l1 = 5;
+    float l2 = 11;
+    float l3 = 13;
 
-    theta(0) =a1+a3- M_PI_2;
+    float A = sqrt(z * z + y * y);
+    float a1 = atan2(y, z);
+    float a3 = M_PI_2 - asin(l1 / A);
 
-    float c1=cos(theta(0));
-    float s1=sin(theta(0));
-    float z1=z+l1*s1;
-    z=z1/c1;
+    theta(0) = a1 + a3 - M_PI_2;
 
-    float A2=sqrt(z*z+x*x);
-    float R1=atan2(x,z);
-    float R2=CosineTheoremAngle(A2,l2,l3);
-    theta(1)=-(R2-R1);
+    float c1 = cos(theta(0));
+    float s1 = sin(theta(0));
+    float z1 = z + l1 * s1;
+    z = z1 / c1;
 
-    float R3=CosineTheoremAngle(l2,l3,A2);
-    theta(2)=(M_PI-R3);
+    float A2 = sqrt(z * z + x * x);
+    float R1 = atan2(x, z);
+    float R2 = CosineTheoremAngle(A2, l2, l3);
+    theta(1) = -(R2 - R1);
+
+    float R3 = CosineTheoremAngle(l2, l3, A2);
+    theta(2) = (M_PI - R3);
     return theta;
 }
 
