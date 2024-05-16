@@ -1,23 +1,27 @@
 #include "Quad.h"
 
 Quad::Quad(/* args */)
-    : br(16, 15, 14, {70, 92, 70}, {-1, 1, 1}),
-      bl(17, 18, 19, {95, 95, 130}, {-1, -1, -1}),
-      fr(11, 12, 13, {80, 92, 70}, {-1, 1, 1}),
-      fl(10, 9, 8, {100, 90, 125}, {-1, -1, -1}),
-      body_height(20),
+    : br(16, 15, 14, {70, 92, 70}, {-1, 1, 1}, 0),
+      bl(17, 18, 19, {95, 95, 130}, {-1, -1, -1}, 1),
+      fr(11, 12, 13, {80, 92, 70}, {-1, 1, 1}, 0),
+      fl(10, 9, 8, {100, 90, 125}, {-1, -1, -1}, 1),
+      body_height(22),
       Tsw(0.5),
       u(0),
       traj(Trajectory(1, body_height, Tsw, 3 * Tsw * 1))
 {
     // NOTE - gait timing {FL, FR, BL, BR}
-    walk_dt = {0, 2. / 4, 1. / 4, 3. / 4};
+    walk_dt = {0, 3. / 4, 1. / 4, 2. / 4};
     trot_dt = {0, 1. / 2, 1. / 2, 0};
 
-    gait_gain = BLAdiagonal<3>(5);
+    offset_fl = {2, 7, 0};
+    offset_fr = {2, -7, 0};
+    offset_bl = {-2, 7, 0};
+    offset_br = {-2, -7, 0};
+
+    gait_gain = BLAdiagonal<3>(10000);
 }
 
-// FIXME -
 void Quad::initHardware()
 {
     BLA::Matrix<3> br_dh_a = {0, 11, 13}; // in CM
@@ -61,10 +65,10 @@ void Quad::init_trot(float vd)
     traj_T = traj.get_T();
     dt = trot_dt;
 
-    drive_legs_IK(traj.get_position(traj_T * (u + dt[0])),
-                  traj.get_position(traj_T * (u + dt[1])),
-                  traj.get_position(traj_T * (u + dt[2])),
-                  traj.get_position(traj_T * (u + dt[3])));
+    drive_legs_IK(traj.get_position(traj_T * (u + dt[0])) + offset_fl,
+                  traj.get_position(traj_T * (u + dt[1])) + offset_fr,
+                  traj.get_position(traj_T * (u + dt[2])) + offset_bl,
+                  traj.get_position(traj_T * (u + dt[3])) + offset_br);
 }
 
 void Quad::init_walk(float vd)
@@ -73,20 +77,21 @@ void Quad::init_walk(float vd)
     traj_T = traj.get_T();
     dt = walk_dt;
 
-    drive_legs_IK(traj.get_position(traj_T * (u + dt[0])),
-                  traj.get_position(traj_T * (u + dt[1])),
-                  traj.get_position(traj_T * (u + dt[2])),
-                  traj.get_position(traj_T * (u + dt[3])));
+    drive_legs_IK(traj.get_position(traj_T * (u + dt[0])) + offset_fl,
+                  traj.get_position(traj_T * (u + dt[1])) + offset_fr,
+                  traj.get_position(traj_T * (u + dt[2])) + offset_bl,
+                  traj.get_position(traj_T * (u + dt[3])) + offset_br);
 }
 
 void Quad::walk(const double &t_time, float t_looptime)
 {
+
     set_time(t_time);
 
-    fl.JInvIK(traj.get_position(traj_T * (u + dt[0])), traj.get_velocity(traj_T * (u + dt[0])), gait_gain, t_looptime);
-    fr.JInvIK(traj.get_position(traj_T * (u + dt[1])), traj.get_velocity(traj_T * (u + dt[1])), gait_gain, t_looptime);
-    bl.JInvIK(traj.get_position(traj_T * (u + dt[2])), traj.get_velocity(traj_T * (u + dt[2])), gait_gain, t_looptime);
-    br.JInvIK(traj.get_position(traj_T * (u + dt[3])), traj.get_velocity(traj_T * (u + dt[3])), gait_gain, t_looptime);
+    fl.JInvIK(traj.get_position(traj_T * (u + dt[0])) + offset_fl, traj.get_velocity(traj_T * (u + dt[0])), gait_gain, t_looptime);
+    fr.JInvIK(traj.get_position(traj_T * (u + dt[1])) + offset_fr, traj.get_velocity(traj_T * (u + dt[1])), gait_gain, t_looptime);
+    bl.JInvIK(traj.get_position(traj_T * (u + dt[2])) + offset_bl, traj.get_velocity(traj_T * (u + dt[2])), gait_gain, t_looptime);
+    br.JInvIK(traj.get_position(traj_T * (u + dt[3])) + offset_br, traj.get_velocity(traj_T * (u + dt[3])), gait_gain, t_looptime);
 
     drive_legs();
 }

@@ -6,11 +6,6 @@
 class Quad
 {
 private:
-    Leg br;
-    Leg bl;
-    Leg fr;
-    Leg fl;
-
     Trajectory traj;
 
     float body_height;
@@ -26,15 +21,24 @@ private:
 
     BLA::Matrix<3, 3> gait_gain;
 
-    void drive_legs();
+    BLA::Matrix<3> offset_fl;
+    BLA::Matrix<3> offset_fr;
+    BLA::Matrix<3> offset_bl;
+    BLA::Matrix<3> offset_br;
 
 public:
+    Leg br;
+    Leg bl;
+    Leg fr;
+    Leg fl;
+
     void initHardware();
 
     Quad(/* args */);
 
     void init_walk(float vd);
     void init_trot(float vd);
+    void drive_legs();
 
     /// @brief Drive all legs to desired theta
     /// @param q_fl
