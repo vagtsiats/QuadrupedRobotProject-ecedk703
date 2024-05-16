@@ -14,7 +14,7 @@ public:
     /// @param t_pin_ankle
     /// @param t_zeros
     /// @param t_polar
-    Leg(int t_pin_shoulder, int t_pin_knee, int t_pin_ankle, const std::vector<float> &t_zeros, const std::vector<float> &t_polar);
+    Leg(int t_pin_shoulder, int t_pin_knee, int t_pin_ankle, const std::vector<float> &t_zeros, const std::vector<float> &t_polar, bool t_left);
 
     void setDh(BLA::Matrix<3> t_dh_a, BLA::Matrix<3> t_dh_alpha, BLA::Matrix<3> t_dh_d);
 
@@ -86,6 +86,8 @@ private:
     int pin_shoulder;
     int pin_knee;
     int pin_ankle;
+
+    bool left;
 
     /// @brief computes Homogeneous transformation based on dh parameters
     BLA::Matrix<4, 4> dhTransform(float a, float alpha, float d, float theta);

@@ -1,10 +1,11 @@
 #include "Leg.h"
 using namespace BLA;
-Leg::Leg(int t_pin_shoulder, int t_pin_knee, int t_pin_ankle, const std::vector<float> &t_zeros, const std::vector<float> &t_polar)
+Leg::Leg(int t_pin_shoulder, int t_pin_knee, int t_pin_ankle, const std::vector<float> &t_zeros, const std::vector<float> &t_polar, bool t_left)
 {
     pin_shoulder = t_pin_shoulder;
     pin_knee = t_pin_knee;
     pin_ankle = t_pin_ankle;
+    left = t_left;
 
     theta = {0, 0, 0};
 
@@ -36,11 +37,11 @@ void Leg::setDh(BLA::Matrix<3> t_dh_a, BLA::Matrix<3> t_dh_alpha, BLA::Matrix<3>
 
 void Leg::driveLeg()
 {
+    update_leg();
+
     shoulder.write(polar[0] * rad2deg(theta(0)) + zeros[0]);
     knee.write(polar[1] * rad2deg(theta(1)) + zeros[1]);
     ankle.write(polar[2] * rad2deg(theta(2)) + zeros[2]);
-
-    update_leg();
 }
 
 void Leg::driveLeg(BLA::Matrix<3> th)
@@ -124,11 +125,11 @@ void Leg::setTheta(BLA::Matrix<3> t_theta)
 // void Leg::JInvIK(Matrix<3> theta0, Matrix<3> xd, Matrix<3> xd_dot)
 const BLA::Matrix<3> Leg::JInvIK(BLA::Matrix<3> x_des, BLA::Matrix<3> xd_des, BLA::Matrix<3, 3> t_gain, float t_dt, BLA::Matrix<3> t_initial_configuration)
 {
-    if (initialisation)
-    {
-        theta = t_initial_configuration;
-        initialisation = false;
-    }
+    // if (initialisation)
+    // {
+    //     theta = t_initial_configuration;
+    //     initialisation = false;
+    // }
 
     // For theta 0 -pi/4 -pi/4 -> 7.95 0 -9.95 so we want to move on the z axis only with inverse dif kinematics:
     Matrix<3> error = x_des - getEndEffectorPosition();
@@ -156,7 +157,11 @@ const BLA::Matrix<3> Leg::JTranspIK(BLA::Matrix<3> x_des, BLA::Matrix<3, 3> t_ga
 Matrix<3> Leg::InverseKinematics(Matrix<3> pos)
 {
     float x = pos(0);
-    float y = pos(1);
+    float y;
+    if (left)
+        y = pos(1);
+    else
+        y = -pos(1);
     float z = -pos(2);
     // Matrix<3> theta;
     float l1 = 5;
@@ -166,8 +171,10 @@ Matrix<3> Leg::InverseKinematics(Matrix<3> pos)
     float A = sqrt(z * z + y * y);
     float a1 = atan2(y, z);
     float a3 = M_PI_2 - asin(l1 / A);
-
-    theta(0) = a1 + a3 - M_PI_2;
+    if (left)
+        theta(0) = a1 + a3 - M_PI_2;
+    else
+        theta(0) = -(a1 + a3 - M_PI_2);
 
     float c1 = cos(theta(0));
     float s1 = sin(theta(0));
