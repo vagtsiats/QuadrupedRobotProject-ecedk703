@@ -2,7 +2,8 @@
 
 Trajectory::Trajectory(float t_vd, float t_y0, float t_Tsw, float t_L) : vd(t_vd), body_height(-t_y0), Tsw(t_Tsw), L(t_L)
 {
-    step_height = 2;
+    step_height = 6;
+    D = 3;
     calculate_trajectory();
 }
 
@@ -21,7 +22,7 @@ void Trajectory::calculate_trajectory()
     P_x_coeffs = quintic_poly({-L / 2, 0, -vd, 0, 0, 0}, {0, Tsw / 2, 0, tsw_vx0, 0, Tsw / 2});
     Pd_x_coeffs = differentiatePolynomial(P_x_coeffs);
 
-    P_y_coeffs = quintic_poly({body_height, 0, 0, 0, 0, 0}, {body_height + step_height, Tsw / 2, 0, Tsw / 2, 0, 3 * Tsw / 5});
+    P_y_coeffs = quintic_poly({body_height, 0, float((M_1_PI * D * vd) / L), 0, 0, 0}, {body_height + step_height, Tsw / 2, 0, Tsw / 2, 0, 3 * Tsw / 5});
     Pd_y_coeffs = differentiatePolynomial(P_y_coeffs);
 }
 
@@ -31,7 +32,7 @@ BLA::Matrix<3> Trajectory::get_position(float t_t)
 
     if (t_t <= Tst)
     {
-        return {((L / 2) - (vd * t_t)), 0, body_height};
+        return {((L / 2) - (vd * t_t)), 0, -D * cos(M_1_PI * (1 / 2 - (t_t * vd) / L)) + body_height};
     }
     else if ((t_t > Tst) && (t_t <= Tst + Tsw / 2))
     {
@@ -51,7 +52,7 @@ BLA::Matrix<3> Trajectory::get_velocity(float t_t)
 
     if (t_t <= Tst)
     {
-        return {-vd, 0, 0};
+        return {-vd, 0, -((M_1_PI * D * vd) / L) * sin(M_1_PI * (1 / 2 - (t_t * vd) / L))};
     }
     else if ((t_t > Tst) && (t_t <= Tst + Tsw / 2))
     {
