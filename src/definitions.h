@@ -9,7 +9,7 @@
 
 using namespace BLA;
 
-const uint32_t LOOP_PERIODus = 100; // 0.0001sec
+const uint32_t LOOP_PERIODus = 10; // 0.0001sec
 const float LOOP_PERIODsec = LOOP_PERIODus / 1e6;
 uint32_t timer0; // constant loop timer
 uint32_t timer1; // general purpose timer used for trajectory

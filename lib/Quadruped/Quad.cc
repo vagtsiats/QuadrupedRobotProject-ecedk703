@@ -5,21 +5,21 @@ Quad::Quad(/* args */)
       bl(17, 18, 19, {95, 95, 130}, {-1, -1, -1}, 1),
       fr(11, 12, 13, {80, 92, 70}, {-1, 1, 1}, 0),
       fl(10, 9, 8, {100, 90, 125}, {-1, -1, -1}, 1),
-      body_height(22),
-      Tsw(0.5),
+      body_height(20),
+      Tsw(0.25),
       u(0),
       traj(Trajectory(1, body_height, Tsw, 3 * Tsw * 1))
 {
     // NOTE - gait timing {FL, FR, BL, BR}
-    walk_dt = {0, 3. / 4, 1. / 4, 2. / 4};
+    walk_dt = {0, 2. / 4, 1. / 4, 3. / 4};
     trot_dt = {0, 1. / 2, 1. / 2, 0};
 
-    offset_fl = {2, 7, 0};
-    offset_fr = {2, -7, 0};
-    offset_bl = {-2, 7, 0};
-    offset_br = {-2, -7, 0};
+    offset_fl = {0, 5, 0};
+    offset_fr = {0, -5, 0};
+    offset_bl = {-2, 5, 0};
+    offset_br = {-2, -5, 0};
 
-    gait_gain = BLAdiagonal<3>(10000);
+    gait_gain = BLAdiagonal<3>(1e5);
 }
 
 void Quad::initHardware()

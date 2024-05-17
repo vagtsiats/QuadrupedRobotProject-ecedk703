@@ -11,7 +11,7 @@ void setup()
     // delay(2000);
 
     Robot.initHardware();
-    // Robot.drive_legs(conf, , conf, conf);
+    // Robot.drive_legs(conf, conf, conf, conf);
     // Robot.fr.InverseKinematics({10, 5, -20});
     // Robot.fl.InverseKinematics({10, 5, -20});
 
@@ -19,7 +19,7 @@ void setup()
 
     // Robot.drive_legs();
     // Robot.init_walk(1);
-    BLAprintMatrix(Robot.fr.getEndEffectorPosition());
+    // BLAprintMatrix(Robot.fr.getEndEffectorPosition());
     delay(2000);
 
     timer0 = micros();
