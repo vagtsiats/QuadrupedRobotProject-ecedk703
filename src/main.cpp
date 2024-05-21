@@ -59,6 +59,7 @@ void loop() {
                 SPEED = input.toFloat();
                 Serial.print("Updated SPEED: ");
                 Serial.println(SPEED);
+                Robot.speed(SPEED);
             }
         }
         client.stop();
@@ -68,7 +69,6 @@ void loop() {
         timer0 = micros();
 
         Robot.walk(micros() / 1.e6, LOOP_PERIODsec);
-        Robot.speed(SPEED);
     }
 #endif
 }
