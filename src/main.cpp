@@ -59,7 +59,7 @@ void loop() {
                 SPEED = input.toFloat();
                 Serial.print("Updated SPEED: ");
                 Serial.println(SPEED);
-                Robot.speed(SPEED);
+                Robot.init_trot(SPEED);
             }
         }
         client.stop();
