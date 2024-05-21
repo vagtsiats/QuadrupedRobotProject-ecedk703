@@ -6,7 +6,7 @@ Quad::Quad(/* args */)
       fr(11, 12, 13, {85, 92, 70}, {-1, 1, 1}, 0),
       fl(10, 9, 8, {100, 95, 125}, {-1, -1, -1}, 1),
       body_height(20),
-      Tsw(0.25),
+      Tsw(0.2),
       u(0),
       traj(Trajectory(0.1, body_height, Tsw, 3 * Tsw * 1))
 {

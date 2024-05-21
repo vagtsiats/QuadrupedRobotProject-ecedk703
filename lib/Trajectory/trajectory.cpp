@@ -2,8 +2,8 @@
 
 Trajectory::Trajectory(float t_vd, float t_y0, float t_Tsw, float t_L) : vd(t_vd), body_height(-t_y0), Tsw(t_Tsw), L(t_L)
 {
-    step_height = 2;
-    D = 3;
+    step_height = 1;
+    D = 2;
     calculate_trajectory();
 }
 

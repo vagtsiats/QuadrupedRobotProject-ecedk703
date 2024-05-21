@@ -6,8 +6,8 @@
 #include "BLA_tools.h"
 #include "trajectory.h"
 #include "Quad.h"
-#include <SPI.h>
-#include <WiFiNINA.h>
+// #include <SPI.h>
+// #include <WiFiNINA.h>
 
 using namespace BLA;
 
@@ -22,11 +22,11 @@ Matrix<3> pos = {0, 0, -20};
 
 Quad Robot;
 
-const char *ssid = "Xiaomi 12";
-const char *password = "paparia2018";
+// const char *ssid = "Xiaomi 12";
+// const char *password = "paparia2018";
 
-WiFiServer server(23);
-WiFiClient client;
+// WiFiServer server(23);
+// WiFiClient client;
 
-float SPEED = 2.0;
-bool Stand = true;
+// float SPEED = 2.0;
+// bool Stand = true;

@@ -6,29 +6,6 @@ using namespace BLA;
 void setup()
 {
     Serial.begin(9600);
-    while (!Serial)
-        ;
-
-    // if (WiFi.status() == WL_NO_MODULE) {
-    //     Serial.println("No WiFi module found!");
-    //     while (true);
-    // }
-
-    int status = WiFi.begin(ssid, password);
-    while (status != WL_CONNECTED)
-    {
-        Serial.print("Attempting to connect to SSID: ");
-        Serial.println(ssid);
-        delay(10000);
-        status = WiFi.begin(ssid, password);
-    }
-
-    Serial.print("Connected to ");
-    Serial.println(ssid);
-    Serial.print("IP Address: ");
-    Serial.println(WiFi.localIP());
-
-    server.begin();
 
     digitalWrite(LED_BUILTIN, 1);
     Robot.initHardware();
@@ -38,7 +15,7 @@ void setup()
     // Robot.bl.InverseKinematics({0, 5, -20});
     // Robot.br.InverseKinematics({0, -5, -20});
 
-    Robot.init_trot(3);
+    Robot.init_trot(10);
 
     Robot.drive_legs();
     // Robot.init_walk(1);
@@ -56,17 +33,15 @@ void loop()
 #else
     
     // SECTION - constant time loop :
-    if (micros() - timer0 >= LOOP_PERIODus)
+    if (micros() - timer_0 >= LOOP_PERIODus)
     {
 
-        timer0 = micros();
+        timer_0 = micros();
         // Serial.println(timer0 / 1.e6);
-
-                Robot.walk(micros() / 1.e6, LOOP_PERIODsec);
-            }
-        }
-        client.stop();
+        Robot.walk(micros() / 1.e6, LOOP_PERIODsec);
+    
     }
+    
 
 #endif
 }
