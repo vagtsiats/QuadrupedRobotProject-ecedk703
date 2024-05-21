@@ -1,15 +1,36 @@
 #include "definitions.h"
 using namespace BLA;
+
 // #define TEST
+
 void setup()
 {
     Serial.begin(9600);
+    while (!Serial)
+        ;
+
+    // if (WiFi.status() == WL_NO_MODULE) {
+    //     Serial.println("No WiFi module found!");
+    //     while (true);
+    // }
+
+    int status = WiFi.begin(ssid, password);
+    while (status != WL_CONNECTED)
+    {
+        Serial.print("Attempting to connect to SSID: ");
+        Serial.println(ssid);
+        delay(10000);
+        status = WiFi.begin(ssid, password);
+    }
+
+    Serial.print("Connected to ");
+    Serial.println(ssid);
+    Serial.print("IP Address: ");
+    Serial.println(WiFi.localIP());
+
+    server.begin();
 
     digitalWrite(LED_BUILTIN, 1);
-
-    // initial delay before start
-    // delay(2000);
-
     Robot.initHardware();
     // Robot.drive_legs(conf, {0,0,0}, conf, conf);
     // Robot.fr.InverseKinematics({0, -5, -20});
@@ -24,17 +45,14 @@ void setup()
     // BLAprintMatrix(Robot.fr.getEndEffectorPosition());
     delay(2000);
 
-    timer0 = micros();
+    timer_0 = micros();
 }
 
 void loop()
 {
-
 #ifdef TEST
     // Robot.drive_legs(conf, conf, conf, conf);
-
     // Robot.drive_legs_IK(pos, pos, pos, pos);
-
 #else
     
     // SECTION - constant time loop :
@@ -44,8 +62,11 @@ void loop()
         timer0 = micros();
         // Serial.println(timer0 / 1.e6);
 
-        Robot.walk(micros() / 1.e6, LOOP_PERIODsec);
+                Robot.walk(micros() / 1.e6, LOOP_PERIODsec);
+            }
+        }
+        client.stop();
     }
-    ///!SECTION
+
 #endif
 }
