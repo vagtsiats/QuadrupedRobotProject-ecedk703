@@ -11,13 +11,15 @@ void setup()
     // delay(2000);
 
     Robot.initHardware();
-    // Robot.drive_legs(conf, conf, conf, conf);
-    // Robot.fr.InverseKinematics({10, 5, -20});
-    // Robot.fl.InverseKinematics({10, 5, -20});
+    // Robot.drive_legs(conf, {0,0,0}, conf, conf);
+    // Robot.fr.InverseKinematics({0, -5, -20});
+    // Robot.fl.InverseKinematics({0, 5, -20});
+    // Robot.bl.InverseKinematics({0, 5, -20});
+    // Robot.br.InverseKinematics({0, -5, -20});
 
-    Robot.init_trot(2);
+    Robot.init_trot(3);
 
-    // Robot.drive_legs();
+    Robot.drive_legs();
     // Robot.init_walk(1);
     // BLAprintMatrix(Robot.fr.getEndEffectorPosition());
     delay(2000);
@@ -34,6 +36,7 @@ void loop()
     // Robot.drive_legs_IK(pos, pos, pos, pos);
 
 #else
+    
     // SECTION - constant time loop :
     if (micros() - timer0 >= LOOP_PERIODus)
     {
