@@ -50,5 +50,5 @@ public:
     /// @brief Drive all legs to desired position using IK
     void drive_legs_IK(BLA::Matrix<3> p_fl, BLA::Matrix<3> p_fr, BLA::Matrix<3> p_bl, BLA::Matrix<3> p_br);
 
-    void walk(const double &t_time, float t_looptime);
+    void gait(const double &t_time, float t_looptime);
 };

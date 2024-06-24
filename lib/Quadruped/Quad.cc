@@ -17,7 +17,7 @@ Quad::Quad(/* args */)
     offset_fl = {0, 5, 1.};
     offset_fr = {0, -5, 1.};
     offset_bl = {-2, 5, 0};
-    offset_br = {-2, -5,0};
+    offset_br = {-2, -5, 0};
 
     gait_gain = BLAdiagonal<3>(5e3);
 }
@@ -51,17 +51,11 @@ void Quad::initHardware()
 
     fl.setDh(fl_dh_a, fl_dh_alpha, fl_dh_d);
     fl.attach_servos();
-
-    // BLA::Matrix<3> init_th = {0, 0, 0};
-    // br.driveLeg(init_th);
-    // bl.driveLeg(init_th);
-    // fr.driveLeg(init_th);
-    // fl.driveLeg(init_th);
 }
 
 void Quad::init_trot(float vd)
 {
-    traj = Trajectory(vd, body_height, Tsw, 3 * Tsw * vd);
+    traj = Trajectory(vd, body_height, Tsw, Tsw * vd);
     traj_T = traj.get_T();
     dt = trot_dt;
 
@@ -73,7 +67,7 @@ void Quad::init_trot(float vd)
 
 void Quad::init_walk(float vd)
 {
-    traj = Trajectory(vd, body_height, Tsw, Tsw * vd);
+    traj = Trajectory(vd, body_height, Tsw, 3 * Tsw * vd);
     traj_T = traj.get_T();
     dt = walk_dt;
 
@@ -83,7 +77,7 @@ void Quad::init_walk(float vd)
                   traj.get_position(traj_T * (u + dt[3])) + offset_br);
 }
 
-void Quad::walk(const double &t_time, float t_looptime)
+void Quad::gait(const double &t_time, float t_looptime)
 {
 
     set_time(t_time);
