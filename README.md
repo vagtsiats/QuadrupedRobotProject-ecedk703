@@ -9,15 +9,17 @@ The trajectories have been implemented with cubic splines and for each leg we ha
 
 ![](resources/trajectory.gif)
 
+Timing such trajectories right we get a walking gait:
+
+![](resources/walk.gif)
+
+and a troting gait:
+
+![](resources/trot.gif)
+
+
 This project was implemented by the following students:
 - [Christos Athanasakis](https://github.com/athanasac)
 - [Christos Kiokakis](https://github.com/ChristosK17)
 - [Alexandros Ntagas](https://github.com/NtagkasAlex)
 - [Vangelis Tsiatsianas](https://github.com/VagTsiats)
-
-
-
-
-
-
-
